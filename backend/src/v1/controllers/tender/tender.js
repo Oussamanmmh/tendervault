@@ -26,6 +26,7 @@ const tenderController = {
            owner: {
           connect: { id: req.user.id } 
         },
+       
         },
       });
 
@@ -48,7 +49,7 @@ const tenderController = {
     try {
 
       const tenders = await prisma.tender.findMany();
-
+      
       return res.json({
         success: true,
         message: tenders,

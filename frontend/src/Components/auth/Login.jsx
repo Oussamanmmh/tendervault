@@ -7,11 +7,10 @@ import React, {
   useRef,
   useState,
 } from "react";
-import classNames from "classnames";
 import { useForm } from "react-hook-form";
-import { ToastContainer, toast } from 'react-toastify';
+import {  toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
-import { loginUser, registerUser } from "../../api";
+import { loginUser } from "../../api";
 import {
   AiFillEye,
   AiFillEyeInvisible,
@@ -27,7 +26,7 @@ function Login() {
   const navigate = useNavigate();
   const [apiError, setApiError] = useState(null);
   const [button, setbutton] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const {
     reset,
     register,
@@ -171,18 +170,7 @@ function Login() {
           </form>
         </div>
       </div>
-        <ToastContainer
-position="top-center"
-autoClose={5000}
-hideProgressBar
-newestOnTop={false}
-closeOnClick
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-theme="light"
-/>
+       
     </div>
   );
 }

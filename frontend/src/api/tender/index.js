@@ -117,6 +117,40 @@ const getMyTendersQuery = () =>
       return data;
     },
   });
+export const useCreateTender = () => {
+  const queryClient = useQueryClient();
+  return useMutation(createTender, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["get-my-tenders", "tenders"]); // Re-fetch queries after successful mutation
+    },
+  });
+};
 
+export const useUpdateTender = () => {
+  const queryClient = useQueryClient();
+  return useMutation(updateTender, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["get-my-tenders", "tenders"]);
+    },
+  });
+};
+
+export const useReviewTender = () => {
+  const queryClient = useQueryClient();
+  return useMutation(reviewTender, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["get-my-tenders", "tenders"]);
+    },
+  });
+};
+
+export const useDeleteTender = () => {
+  const queryClient = useQueryClient();
+  return useMutation(deleteTender, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["get-my-tenders", "tenders"]);
+    },
+  });
+};
 
 export { createTender, updateTender,reviewTender, deleteTender ,getalltenderquery,getMyTendersQuery,getallcategoryquery,tenderdetailsquery,searchTendersQuery};

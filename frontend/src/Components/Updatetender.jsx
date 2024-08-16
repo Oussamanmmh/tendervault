@@ -3,11 +3,10 @@ import Navbar from './Navbar';
 import { updateTender, tenderdetailsquery } from '../api/tender';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
+import {  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-// import { toast } from 'react-hot-toast';
 import Loading from './Loading';
 
 const UpdateTender = () => {
@@ -187,18 +186,7 @@ const UpdateTender = () => {
           </form>
         </div>
       </div>
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+      
     </div>
   );
 };

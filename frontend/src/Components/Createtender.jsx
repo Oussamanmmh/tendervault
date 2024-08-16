@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createTender } from "../api/tender";
 import Navbar from './Navbar';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import Loading from './Loading';
@@ -168,19 +168,8 @@ const Createtender = () => {
         </form>
       </div>
     </div>
-   <ToastContainer
-position="top-center"
-autoClose={5000}
-hideProgressBar
-newestOnTop={false}
-closeOnClick
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-theme="light"
-/>
-</div>
+     
+  </div>
   );
 };
 

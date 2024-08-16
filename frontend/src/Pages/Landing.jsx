@@ -211,23 +211,23 @@ const data = GetUserQuery();
                 <h1 className='flex justify-center text-4xl	text-gray-900 font-normal mb-12'>{t("a5")}</h1>
                 <div className="flex flex-wrap -m-4">
                     <div className="xl:w-1/4 md:w-1/2 sm:w-5/6 mx-auto lg:mx-0 p-4">
-                        <img className="h-[300px] rounded w-full object-cover object-center mb-6" src={electric} alt="content" />
-                        <h3 className="flex justify-center text-2xl"> {t("a6")}</h3>
+                        <img className="h-[300px] rounded w-full object-cover object-center mb-6  transition-transform duration-300 ease-in-out transform hover:scale-110" src={electric} alt="content" />
+                        <h3 className="flex justify-center text-2xl transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:translate-x-3 hover:scale-110"> {t("a6")}</h3>
+                        <h2 className="flex justify-center  text-base text-violet-500 mb-4">{t("a0")}</h2>
+                    </div>
+                    <div className="xl:w-1/4 md:w-1/2 p-4 sm:w-5/6 mx-auto lg:mx-0 ">
+                        <img className="h-[300px] rounded w-full object-cover object-center mb-6 transition-transform duration-300 ease-in-out transform hover:scale-110" src={solar} alt="content" />
+                        <h3 className="flex justify-center text-2xl transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:translate-x-3 hover:scale-110">{t("a7")}</h3>
                         <h2 className="flex justify-center text-base text-violet-500 mb-4">{t("a0")}</h2>
                     </div>
                     <div className="xl:w-1/4 md:w-1/2 p-4 sm:w-5/6 mx-auto lg:mx-0 ">
-                        <img className="h-[300px] rounded w-full object-cover object-center mb-6" src={solar} alt="content" />
-                        <h3 className="flex justify-center text-2xl">{t("a7")}</h3>
+                        <img className="h-[300px] rounded w-full object-cover object-center mb-6 transition-transform duration-300 ease-in-out transform hover:scale-110" src={hotel} alt="content" />
+                        <h3 className="flex justify-center items-center text-2xl transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:translate-x-3 hover:scale-110" >{t("a8")}</h3>
                         <h2 className="flex justify-center text-base text-violet-500 mb-4">{t("a0")}</h2>
                     </div>
                     <div className="xl:w-1/4 md:w-1/2 p-4 sm:w-5/6 mx-auto lg:mx-0 ">
-                        <img className="h-[300px] rounded w-full object-cover object-center mb-6" src={hotel} alt="content" />
-                        <h3 className="flex justify-center items-center text-2xl">{t("a8")}</h3>
-                        <h2 className="flex justify-center text-base text-violet-500 mb-4">{t("a0")}</h2>
-                    </div>
-                    <div className="xl:w-1/4 md:w-1/2 p-4 sm:w-5/6 mx-auto lg:mx-0 ">
-                        <img className="h-[300px] rounded w-full object-cover object-center mb-6" src={road} alt="content" />
-                        <h3 className="flex justify-center text-2xl">{t("a9")}</h3>
+                        <img className="h-[300px] rounded w-full object-cover object-center mb-6 transition-transform duration-300 ease-in-out transform hover:scale-110" src={road} alt="content" />
+                        <h3 className="flex justify-center text-2xl transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:translate-x-3 hover:scale-110">{t("a9")}</h3>
                         <h2 className="flex justify-center text-base text-violet-500 mb-4">{t("a0")}</h2>
                     </div>
                 </div>
