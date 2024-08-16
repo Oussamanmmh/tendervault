@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 //import { Toaster, toast, useToasterStore } from "react-hot-toast";
-  import { ToastContainer, toast } from 'react-toastify';
+  import {toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
 import { useEffect } from "react";
 
@@ -69,27 +69,20 @@ function App() {
             <Route path="/" element={<Landing/>} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
-             <Route path="/home" element={<Home />} />
-              <Route path="/myprofile" element={<Profile1 />} />
-               <Route path="/createtender" element={<Createtender />} />
-               <Route path="/tender/:tenderId"  element={<TenderDetail />} />
-               <Route path="/profile/:userId"  element={<UserProfile />} />
+              <Route path="/createtender" element={<Createtender />} />
                <Route path="/updatetender/:tenderId" element={<UpdateTender />} />
                <Route path="/loading" element={<Loading />} />
+
+               
+             <Route path="/home" element={<Home />} />
+              <Route path="/myprofile" element={<Profile1 />} />
+              
+               <Route path="/tender/:tenderId"  element={<TenderDetail />} />
+               <Route path="/profile/:userId"  element={<UserProfile />} />
+               
           </Route>
         </Routes>
-          <ToastContainer
-position="top-center"
-autoClose={5000}
-hideProgressBar={true}
-newestOnTop={false}
-closeOnClick
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-theme="light"
-/>
+         
         </div>
   );
 }

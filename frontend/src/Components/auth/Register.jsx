@@ -1,7 +1,7 @@
 import { TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
 import { registerUser } from "../../api";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
@@ -49,7 +49,7 @@ function Register() {
     setbutton(true);
     try {
       const { data } = await registerUser(formData);
-      // toast.success(data.message, { id: data.message });
+
       showToast('User Registered Successfully', 'success');
       navigate("/login");
       reset();
@@ -185,18 +185,7 @@ function Register() {
           </form>
         </div>
       </div>
-       <ToastContainer
-position="top-center"
-autoClose={5000}
-hideProgressBar
-newestOnTop={false}
-closeOnClick
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-theme="light"
-/>
+     
     </div>
   );
 }
