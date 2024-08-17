@@ -69,11 +69,11 @@ const tenderController = {
   try {
     const { name } = req.query;
 
-   
     const matchingTenders = await prisma.tender.findMany({
       where: {
         title: {
           contains: name,
+          mode: "insensitive",  
         },
       },
     });
@@ -94,6 +94,7 @@ const tenderController = {
     await prisma.$disconnect();
   }
 }
+
 ,
   async getMyTenders(req, res, next) {
   try {

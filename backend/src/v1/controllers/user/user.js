@@ -12,6 +12,21 @@ const prisma = new PrismaClient();
 const userController = {
  
 
+  async user1Details(req, res, next) {
+    try {
+      const {userId}=req.body
+      let user;
+      user = await prisma.user.findFirst({
+        where: {
+          id:userId
+        },
+      });
+      res.json(customResponse(200, user));
+    } catch (err) {
+      res.json(customResponse(400, err));
+      console.log(err, "err");
+    }
+  },
   async userDetails(req, res, next) {
     try {
       let user;

@@ -8,7 +8,8 @@ import { useEffect } from "react";
 import Register from "./Components/auth/Register";
 import Login from "./Components/auth/Login";
 import Landing from "./Pages/Landing";
-import Home from "./Pages/Home";
+// import Home from "./Pages/Home";
+import Home from "./Components/Home1";
 import Createtender from "./Components/Createtender";
 import UpdateTender from "./Components/Updatetender";
 import Profile from "./Components/Profile";
@@ -74,7 +75,7 @@ function App() {
                <Route path="/loading" element={<Loading />} />
 
                
-             <Route path="/home" element={<Home />} />
+             <Route path="/home" element={<Home/>} />
               <Route path="/myprofile" element={<Profile1 />} />
               
                <Route path="/tender/:tenderId"  element={<TenderDetail />} />
