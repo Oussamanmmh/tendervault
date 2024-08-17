@@ -9,11 +9,11 @@ import tenderController from "../controllers/tender/tender";
 const router = express.Router();
 
 router.get("/user-details", authMiddleware, userController.userDetails);
+router.get("/user-details1", authMiddleware, userController.user1Details);
 router.get("/getvendors", authMiddleware, userController.getVendors);
 router.get("/getcompany", authMiddleware, userController.getCompanies);
 router.get("/getcategory", authMiddleware, tenderController.getAllCategories);
 router.get("/tenderdetails/:tenderId", authMiddleware, tenderController.getTenderDetails);
-//router.get("/userdetails/:userId", authMiddleware, userController.getUserDetails);
 router.post("/createtender", authMiddleware, tenderController.createTender);
 router.delete("/deletetender", authMiddleware, tenderController.deleteTender);
 router.put("/updatetender", authMiddleware, tenderController.updateTender);

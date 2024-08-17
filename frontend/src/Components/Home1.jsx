@@ -1,92 +1,183 @@
+import React, { useState, useEffect } from 'react';
+import { getallcategoryquery, getalltenderquery, searchTendersQuery } from '../api/tender';
+import Navbar from './Navbar';
+import Loading from './Loading';
+import TenderCard from './TenderCard';
+import CategoryFilter from './CategoryFilter';
+import PriceRangeFilter from './PriceRangeFilter';
+import { GetUserQuery } from '../api/user';
+import Rightupbar from './Rightupbar';
+import Rightdownbar from './Rightdownbar';
+import { useDebounce } from '../hooks/useDebounce'; // Import the debounce hook
+
+const Home = () => {
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [showSoldTenders, setShowSoldTenders] = useState(false);
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [user, setUser] = useState();
 
 
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { getalltenderquery } from '../api/tender/index'; 
-// import Leftupbar from './Leftupbar';
-// import Leftdownbar from './Leftdownbar';
+  
+const debouncedSearchTerm = useDebounce(searchTerm, 2000); 
+  const { data: categories, isLoading: categoriesLoading, isError: categoriesError } = getallcategoryquery();
+  const { data: tenders, isLoading: tendersLoading, isError: tendersError } = getalltenderquery();
+  const { data: searchResults, isLoading: searchResultsLoading, isError: searchResultsError } = searchTendersQuery(debouncedSearchTerm);
 
+  const data = GetUserQuery();
 
-const renderStarRating = (rating) => {
-  const stars = [];
-  for (let i = 0; i < 5; i++) {
-    stars.push(
-      <span
-        key={i}
-        className={`text-yellow-400 ${
-          i < rating ? 'text-opacity-100' : 'text-opacity-40'
-        } text-lg mr-1`}
-      >
-        ★
-      </span>
+  useEffect(() => {
+    setUser(data?.data);
+  }, [data.data]);
+
+  if (categoriesLoading || tendersLoading) {
+    return (
+      <div style={{ minHeight: '800px', minWidth: '1200px' }}>
+        <Loading />
+      </div>
     );
   }
-  return stars;
-};
 
-const Home1 = () => {
-
-  const { data: tenders, isLoading, isError } = getalltenderquery();
-
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (categoriesError || tendersError) {
+    return <div>Error loading data.</div>;
   }
 
-  if (isError) {
-    return <div>Error loading tenders.</div>;
-  }
-console.log("tender",tenders);
-  return (
-    <div className="bg-gray-200 w-full overflow-y-scroll scrollbar-hide">
-      
-        
-       {/* <div className="hidden lg:grid justify-items-center w-[43%]  bg-gray-200 ">
-          <Leftupbar />
-          <Leftdownbar/>
-        </div> */}
-         <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-        {tenders.map((tender) => (
-          
-          <div
-            key={tender.id}
-            className="bg-gray-50 rounded-lg p-4 cursor-pointer shadow-md hover:shadow-lg"
-            style={{
-              boxShadow:
-                '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-            }}
-          >
-            <img
-              src={tender.imageUrl}
-              alt={tender.companyName}
-              className="w-full h-40 object-cover rounded-lg mb-2"
-            />
-            <h2 className="text-xl font-semibold">{tender.title}</h2>
-            <p className="text-gray-600 text-sm">{tender.description}</p>
-            <p className="text-gray-400 text-sm mt-2">
-              Company: {tender.owner}
-            </p>
-            <p className="text-gray-400 text-sm">Category: {tender.category}</p>
-            <p className="text-gray-400 text-sm">Cost: {tender.cost}</p>
-            <p className="text-gray-400 text-sm">Status: {tender.status}</p>
-            <div className="flex items-center mt-2">
-              <div className="mr-2">{renderStarRating(tender.rating)}</div>
-              <div className="text-gray-400 text-sm">(Rating: {tender.rating})</div>
-            </div>
-            <div className="mt-4">
-              <button className="bg-blue-500 text-white rounded-md px-3 py-1 mr-2">
-                Bid
-              </button>
-              <button className="bg-gray-400 text-white rounded-md px-3 py-1">
-                Details
-              </button>
-            </div>
-          </div>
+  const dummyPriceRanges = [
+    { id: 1, label: 'Under 1000', minPrice: 0, maxPrice: 1000 },
+    { id: 2, label: '1001 - 1500', minPrice: 1001, maxPrice: 1500 },
+    { id: 3, label: '1501 - 2000', minPrice: 1501, maxPrice: 2000 },
+    { id: 4, label: '2001 - 2500', minPrice: 2001, maxPrice: 2500 },
+    { id: 5, label: 'Over 2500', minPrice: 2501, maxPrice: Infinity },
+  ];
+
+  const handleCategoryChange = (categoryId) => {
+    const categoryName = categories[categoryId].toLowerCase();
+    setSelectedCategories(prev =>
+      prev.includes(categoryName)
+        ? prev.filter(name => name !== categoryName)
+        : [...prev, categoryName]
+    );
+  };
+
+  const handlePriceRangeChange = (priceRangeId) => {
+    setSelectedPriceRanges(prev =>
+      prev.includes(priceRangeId)
+        ? prev.filter(range => range !== priceRangeId)
+        : [...prev, priceRangeId]
+    );
+  };
+
+  const handleSearchChange = (query) => {
+    setSearchTerm(query);
+  };
+
+  const handleSearch = () => {
+  };
+
+  const getFilteredTenders = () => {
+    if (debouncedSearchTerm !== '' && searchResults) {
+      return searchResults.data.filter((tender) => {
+        const categoryName = tender.category.toLowerCase();
+        const isCategorySelected = !selectedCategories.length || selectedCategories.includes(categoryName);
+
+        const isPriceInRange = !selectedPriceRanges.length || selectedPriceRanges.some(priceRangeId => {
+          const range = dummyPriceRanges.find(r => r.id === priceRangeId);
+          return range && tender.cost >= range.minPrice && tender.cost <= range.maxPrice;
+        });
+
+        const isSoldStatusMatch = !showSoldTenders || tender.status === 'sold';
+
+        return isCategorySelected && isPriceInRange && isSoldStatusMatch;
+      });
+    } else {
+      //for frontend search
+      return tenders.filter((tender) => {
+        const isSearchMatch = !debouncedSearchTerm || tender.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+
+        const categoryName = tender.category.toLowerCase();
+        const isCategorySelected = !selectedCategories.length || selectedCategories.includes(categoryName);
+
+        const isPriceInRange = !selectedPriceRanges.length || selectedPriceRanges.some(priceRangeId => {
+          const range = dummyPriceRanges.find(r => r.id === priceRangeId);
+          return range && tender.cost >= range.minPrice && tender.cost <= range.maxPrice;
+        });
+
+        const isSoldStatusMatch = !showSoldTenders || tender.status === 'sold';
+
+        return isCategorySelected && isPriceInRange && isSoldStatusMatch;
+      });
+    }
+  };
+
+  const filteredTenders = getFilteredTenders();
+
+  const renderTenders = () => {
+    if (debouncedSearchTerm !== '' && searchResults && searchResults.length === 0) {
+      return <div className="text-gray-600">No matches found.</div>;
+    }
+
+    if (filteredTenders.length === 0) {
+      return <p>No tenders available.</p>;
+    }
+
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 p-4">
+        {filteredTenders.map((tender) => (
+          <TenderCard key={tender.id} tender={tender} user={user} />
         ))}
       </div>
-    </div>
+    );
+  };
+
+  return (
+    <div className="t">
+      <Navbar 
+        searchTerm={searchTerm} 
+        onSearchChange={handleSearchChange} 
+        handleSearch={handleSearch} 
+        user={user} 
+      />
+      <div className="flex flex-row h-[90vh]">
+        <div className="hidden lg:grid justify-items-center w-[43%] bg-gray-200">
+          <CategoryFilter
+            categories={categories}
+            selectedCategories={selectedCategories}
+            onCategoryChange={handleCategoryChange}
+          />
+          <PriceRangeFilter
+            priceRanges={dummyPriceRanges}
+            selectedPriceRanges={selectedPriceRanges}
+            onPriceRangeChange={handlePriceRangeChange}
+          />
+        </div>
+        <div className="bg-gray-200 w-full overflow-y-scroll scrollbar-hide">
+          <div className="flex justify-between p-4 px-16">
+            <h1
+              className={`cursor-pointer font-bold text-xl ${
+                !showSoldTenders ? 'text-blue-700' : 'text-gray-500'
+              }`}
+              onClick={() => setShowSoldTenders(false)}
+            >
+              Unsold Tenders
+            </h1>
+            <h1
+              className={`cursor-pointer font-bold text-xl ${
+                showSoldTenders ? 'text-blue-700' : 'text-gray-500'
+              }`}
+              onClick={() => setShowSoldTenders(true)}
+            >
+              Sold Tenders
+            </h1>
+          </div>
+          {renderTenders()}
+        </div>
+        <div className="hidden lg:grid justify-items-center w-[43%] bg-gray-200">
+          <Rightupbar />
+          <Rightdownbar />
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Home1;
+export default Home;
