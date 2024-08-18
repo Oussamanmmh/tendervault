@@ -1,23 +1,19 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {  Routes, Route } from "react-router-dom";
 //import { Toaster, toast, useToasterStore } from "react-hot-toast";
   import {toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
 import { useEffect } from "react";
+import RegisterPage from './Pages/RegisterPage'
+import LoginPage from './Pages/LoginPage'
+import MyProfilePage from './Pages/MyProfilePage'
+import UserProfilePage from './Pages/UserProfilePage'
+import TenderDetailsPage from './Pages/TenderDetailsPage'
+import HomePage from './Pages/HomePage'
+import LandingPage from './Pages/LandingPage'
+import CreateTenderPage from './Pages/CreateTenderPage'
+import UpdateTenderPage from './Pages/UpdateTenderPage'
 
-import Register from "./Components/auth/Register";
-import Login from "./Components/auth/Login";
-import Landing from "./Pages/Landing";
-// import Home from "./Pages/Home";
-import Home from "./Components/Home1";
-import Createtender from "./Components/Createtender";
-import UpdateTender from "./Components/Updatetender";
-import Profile from "./Components/Profile";
-import TenderDetail from "./Components/TenderDetail";
-import TenderDetails from "./Components/TenderDetails";
-import Loading from "./Components/Loading";
-import Profile1 from "./Components/Profile1";
-import UserProfile from "./Components/Userprofile";
 
 function App() {
   const showToast = (message, type = 'error') => {
@@ -53,33 +49,21 @@ function App() {
     }
   }, []);
 
-  // const MAX_TOAST_LIMIT = 1;
-  // const { toasts } = useToasterStore();
-  // useEffect(() => {
-  //   toasts
-  //     .filter((t) => t.visible)
-  //     .filter((_, i) => i >= MAX_TOAST_LIMIT)
-  //     .forEach((t) => toast.dismiss(t.id));
-  // }, [toasts]);
 
   return (
     <div className="App">
       
         <Routes>
           <Route path="/">
-            <Route path="/" element={<Landing/>} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-              <Route path="/createtender" element={<Createtender />} />
-               <Route path="/updatetender/:tenderId" element={<UpdateTender />} />
-               <Route path="/loading" element={<Loading />} />
-
-               
-             <Route path="/home" element={<Home/>} />
-              <Route path="/myprofile" element={<Profile1 />} />
-              
-               <Route path="/tender/:tenderId"  element={<TenderDetail />} />
-               <Route path="/profile/:userId"  element={<UserProfile />} />
+            <Route path="/" element={<LandingPage/>} />
+            <Route path="/register" element={<RegisterPage/>} />
+            <Route path="/login" element={<LoginPage />} />
+              <Route path="/home" element={<HomePage/>} />
+              <Route path="/createtender" element={<CreateTenderPage />} />
+               <Route path="/updatetender/:tenderId" element={<UpdateTenderPage />} />
+              <Route path="/tender/:tenderId"  element={<TenderDetailsPage />} />
+               <Route path="/myprofile" element={<MyProfilePage/>} />
+               <Route path="/profile/:userId"  element={<UserProfilePage/>} />
                
           </Route>
         </Routes>

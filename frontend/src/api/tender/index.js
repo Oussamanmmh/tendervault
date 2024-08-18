@@ -121,7 +121,7 @@ export const useCreateTender = () => {
   const queryClient = useQueryClient();
   return useMutation(createTender, {
     onSuccess: () => {
-      queryClient.invalidateQueries(["get-my-tenders", "tenders"]); // Re-fetch queries after successful mutation
+      queryClient.invalidateQueries(["get-my-tenders", "tenders"]); 
     },
   });
 };

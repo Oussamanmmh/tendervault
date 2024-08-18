@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from './Navbar';
-import { updateTender, tenderdetailsquery } from '../api/tender';
+import Navbar from '../Navbar';
+import { updateTender, tenderdetailsquery } from '../../api/tender';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import {  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { GetMyDetailsQuery } from '../../api/user';
 
-
-import Loading from './Loading';
+import Loading from '../utils/Loading';
 
 const UpdateTender = () => {
   const { tenderId } = useParams();
   const { data: tenderDetails, isLoading, isError } = tenderdetailsquery(tenderId);
-
+     const {data:user,isLoading:userLoading,isError:userError} = GetMyDetailsQuery();
 
   const [tenderName, setTenderName] = useState('');
   const [description, setDescription] = useState('');
@@ -44,7 +44,7 @@ const UpdateTender = () => {
     }
   }, [tenderDetails, isLoading, isError]);
 
-  if (isLoading||loadingUpdate) {
+  if (isLoading||loadingUpdate||userLoading) {
     return (
       <div style={{ minHeight: '800px', minWidth: '1200px' }}>
         <Loading />
@@ -52,8 +52,8 @@ const UpdateTender = () => {
     );
   }
 
-  if (isError) {
-    return <div>Error loading tender details.</div>;
+  if (isError||userError) {
+    return <div>Error loading data.</div>;
   }
 
   const handleSubmit = async (e) => {
@@ -93,7 +93,7 @@ const UpdateTender = () => {
 
   return (
     <div>
-      <Navbar />
+      <Navbar user={user} />
 
       <div className="bg-gray-200 min-h-[90vh] flex flex-col items-center justify-center">
         <div className="bg-white p-8 h-[87.5vh] rounded-lg shadow-md w-full max-w-lg">

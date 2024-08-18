@@ -8,8 +8,8 @@ import tenderController from "../controllers/tender/tender";
 
 const router = express.Router();
 
-router.get("/user-details", authMiddleware, userController.userDetails);
-router.get("/user-details1", authMiddleware, userController.user1Details);
+router.get("/my-details", authMiddleware, userController.myDetails);
+router.get("/user-details/:userId", authMiddleware, userController.userDetails);
 router.get("/getvendors", authMiddleware, userController.getVendors);
 router.get("/getcompany", authMiddleware, userController.getCompanies);
 router.get("/getcategory", authMiddleware, tenderController.getAllCategories);

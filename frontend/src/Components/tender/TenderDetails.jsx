@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
-import {tenderdetailsquery} from '../api/tender'
+import {tenderdetailsquery} from '../../api/tender'
 
 
 import { useParams } from 'react-router-dom';
 
-import Loading from './Loading'
+import Loading from '../utils/Loading'
 
-import BidList from './BidList';
+import BidList from '../bids/BidList';
 import TenderDetailsCard from './TenderDetailsCard';
 const TenderDetails = () => {
   const { tenderId } = useParams();

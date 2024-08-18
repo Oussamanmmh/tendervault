@@ -1,15 +1,9 @@
 import React, { useState,useEffect } from 'react';
-import Navbar from '../Components/Navbar'
-import Hero from '../Components/hero'
-import Featured from '../Components/featured'
-import Discover from '../Components/discover'
-import Form from '../Components/form'
-import Blog from '../Components/blog'
-import Footer from '../Components/footer'
+
 import { Link } from 'react-router-dom';
-import { AiOutlineSearch } from "react-icons/ai";
+
 import LogoutIcon from '@mui/icons-material/Logout';
-import { RiSearchLine } from "react-icons/ri";
+
 import featured from "../img/featured1.jpg"
 import electric from "../img/electric.jpg"
 import solar from "../img/solar.jpg"
@@ -20,8 +14,8 @@ import img2 from "../img/cloud.png"
 import img3 from "../img/hotel.jpg"
 import img4 from "../img/solar.jpg"
 import { Link as ScrollLink, Element } from 'react-scroll';
-import { GetUserQuery } from "../../src/api/user";
-
+import { GetMyDetailsQuery } from "../api/user";
+import i18n from "../../src/Language/i18n"
 import {
   Home,
   HomeOutlined,
@@ -33,17 +27,20 @@ import {
   AccountCircleOutlined,
 
 } from "@mui/icons-material";
+import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import { useTranslation } from "react-i18next";
-import i18n from "../../src/Language/i18n"
 
-const Landing = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-    const [dropDown, setDropDown] = useState(false);
+
+const LandingPage = () => {
       const [user, setuser] = useState();
  const { t, i18n } = useTranslation();
-const data = GetUserQuery();
+   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+const data = GetMyDetailsQuery();
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
+  };
+   const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
   };
  useEffect(() => {
     setuser(data?.data);
@@ -55,121 +52,163 @@ const data = GetUserQuery();
      <>
       <div className='flex flex-col w-full'>
         {/* <Navbar /> */}
-         <div className='flex flex-col bg-blue-950 w-full sticky top-0 z-50'>
-         <div className="container mx-auto flex flex-wrap p-3 flex-col md:flex-row items-center justify-between">
-            <Link to="/">
-               <div>
-                  <span className='font-mont text-blue-300 text-4xl font-bold'>Tender</span>
-                  <span className='font-mont text-gray-50 text-xl font-bold'>Vault</span>
-               </div>
+        <div className='flex flex-col bg-blue-950 w-full sticky top-0 z-50'>
+      <div className="container mx-auto flex flex-wrap p-3 flex-row items-center justify-between">
+        <Link to="/">
+          <div>
+            <span className='font-mont text-blue-300 text-4xl font-bold'>Tender</span>
+            <span className='font-mont text-gray-50 text-xl font-bold'>Vault</span>
+          </div>
+        </Link>
+
+        {/* Hamburger Icon for small screens */}
+        <div className="sm:hidden flex items-center">
+          <button onClick={toggleDrawer}>
+            {isDrawerOpen ? (
+              <AiOutlineClose className="text-white text-3xl" />
+            ) : (
+              <AiOutlineMenu className="text-white text-3xl" />
+            )}
+          </button>
+        </div>
+
+        {/* Navbar Links */}
+        <nav className="hidden sm:flex flex-wrap items-center text-base justify-center md:ml-auto">
+          {user && (
+            <Link to="/home">
+              <span className="font-mont text-gray-50 text-xl font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">Home</span>
             </Link>
-          
-            <nav className="md:ml-auto flex flex-wrap pl-3 items-center text-base justify-center">
-                {
-                    user?(
-                         <Link to="/home">
-                  <span className="font-mont text-gray-50 text-xl font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">Home</span>
-               </Link>
-                    ):(" ")
-                }
-               {/* <Link to="/home">
-                  <span className="font-mont text-gray-50 text-xl font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">Home</span>
-               </Link> */}
-               {/* <span className="font-mont text-gray-50 text-lg font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">Language</span> */}
-             <span className="font-mont text-gray-800 text-lg font-bold mr-10 hover:text-blue-500 hover:cursor-pointer">
-                 <select
-              name="language"
+          )}
+
+          <ScrollLink to="aboutus" smooth={true} duration={500}>
+            <span className="font-mont text-gray-50 text-lg font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">About us</span>
+          </ScrollLink>
+          <ScrollLink to="explore" smooth={true} duration={500}>
+            <span className="font-mont text-gray-50 text-lg font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">Explore</span>
+          </ScrollLink>
+          <ScrollLink to="stories" smooth={true} duration={500}>
+            <span className="font-mont text-gray-50 text-lg font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">Stories</span>
+          </ScrollLink>
+
+          <span className="font-mont text-gray-800 text-lg font-bold mr-10 hover:text-blue-500 hover:cursor-pointer">
+            <select
+               name="language"
               className="outline-none"
               id="language"
-              onChange={() => {
-                changeLanguage(document.getElementById("language").value);
-              }}
+              onChange={() => changeLanguage(document.getElementById("language").value)}
             >
               <option value="en">English</option>
               <option value="be">বাংলা</option>
               <option value="hi">हिंदी</option>
               <option value="gj">ગુજરાતી</option>
-          
-            
-     
               <option value="pu">ਪੰਜਾਬੀ</option>
-           
             </select>
-            </span>
-     <ScrollLink to="aboutus" smooth={true} duration={500}>       
-<span className="font-mont text-gray-50 text-lg font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">About us</span>
-</ScrollLink>  
-<ScrollLink to="explore" smooth={true} duration={500}>  
-<span className="font-mont text-gray-50 text-lg font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">Explore</span>
-</ScrollLink>  
-<ScrollLink to="stories" smooth={true} duration={500}> 
-<span className="font-mont text-gray-50 text-lg font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">Stories</span>
-</ScrollLink>  
-             {
-                user?(
-                    <div>
-                     <span className="font-mont text-gray-50 text-lg font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">Hello, {user.name}</span>
-                     <span className="font-mont text-gray-50 text-lg font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">
-               <Link  onClick={() => {
-                        localStorage.removeItem("token");
-                      }}
-                      to="/login">
+          </span>
 
-      <LogoutIcon style={{ color: "white",fontSize: 32 }} />
-      </Link>
-      </span>
-      </div>
-                ):(
-                   <Link to="/login">
-               <span className="font-mont text-gray-50 text-lg font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">Login</span>
-               </Link> 
-                )
-             }  
-               {/* 
-               <Link to="/login">
-               <span className="font-mont text-gray-50 text-lg font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">Login</span>
-               </Link>
-               <span className="font-mont text-gray-50 text-lg font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">
-               <Link  onClick={() => {
-                        localStorage.removeItem("token");
-                      }}
-                      to="/login">
-
-      <LogoutIcon style={{ color: "white",fontSize: 32 }} />
-      </Link> */}
-
-           {/* {user ? (
-              <button
-                className=" primary-btn "
-                onClick={() => {
-                  localStorage.removeItem("token");
-                  navigate("/login");
-                }}
-              >
-                LOG OUT
-              </button>
-            ) : (
-              <Link to="/login">
-                <button className=" primary-btn ">Login</button>
-              </Link>
-            )} */}
-      {/* </span> */}
-            </nav>
-            {
-                user?(
-<div className='flex mt-4 md:mt-0'>
-               <Link to="/myprofile">
-              <AccountCircleOutlined style={{ color: "white",fontSize: 32}} />
-               </Link>
+          {user ? (
+            <div className="flex items-center">
+              <span className="font-mont text-gray-50 text-lg font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">
+                Hello, {user.name.length > 20 ? user.name.substring(0, 20) + "..." : user.name}
+              </span>
+              <span className="font-mont text-gray-50 text-lg font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">
+                <Link
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                  }}
+                  to="/login"
+                >
+                  <LogoutIcon style={{ color: "white", fontSize: 32 }} />
+                </Link>
+              </span>
             </div>
-                ):(
-" "
-                )
-            }
-            
-           
-         </div>
+          ) : (
+            <Link to="/login">
+              <span className="font-mont text-gray-50 text-lg font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">Login</span>
+            </Link>
+          )}
+        </nav>
+
+        {/* Profile Icon for logged-in users */}
+        {user && (
+          <div className='hidden sm:flex mt-4 md:mt-0'>
+            <Link to="/myprofile">
+              <AccountCircleOutlined style={{ color: "white", fontSize: 32 }} />
+            </Link>
+          </div>
+        )}
       </div>
+
+      {/* Drawer for small screens */}
+      {isDrawerOpen && (
+        <div className="fixed inset-0 z-40 flex">
+          <div className="w-64 h-full bg-blue-950 p-5 shadow-lg fixed right-0 top-0 z-50">
+            <button onClick={toggleDrawer} className="text-white mb-4">
+              <AiOutlineClose className="text-3xl" />
+            </button>
+            <nav className="flex flex-col space-y-4">
+              <Link to="/home" onClick={toggleDrawer}>
+                <span className="font-mont text-gray-50 text-lg font-bold hover:text-blue-300">Home</span>
+              </Link>
+              <ScrollLink to="aboutus" smooth={true} duration={500} onClick={toggleDrawer}>
+                <span className="font-mont text-gray-50 text-lg font-bold hover:text-blue-300">About us</span>
+              </ScrollLink>
+              <ScrollLink to="explore" smooth={true} duration={500} onClick={toggleDrawer}>
+                <span className="font-mont text-gray-50 text-lg font-bold hover:text-blue-300">Explore</span>
+              </ScrollLink>
+              <ScrollLink to="stories" smooth={true} duration={500} onClick={toggleDrawer}>
+                <span className="font-mont text-gray-50 text-lg font-bold hover:text-blue-300">Stories</span>
+              </ScrollLink>
+
+              <span className="font-mont text-gray-800 text-lg font-bold hover:text-blue-500 hover:cursor-pointer">
+                <select
+                   name="language"
+              className="outline-none"
+              id="language-drawer"
+                  onChange={() => changeLanguage(document.getElementById("language-drawer").value)}
+                >
+                  <option value="en">English</option>
+                  <option value="be">বাংলা</option>
+                  <option value="hi">हिंदी</option>
+                  <option value="gj">ગુજરાતી</option>
+                  <option value="pu">ਪੰਜਾਬੀ</option>
+                </select>
+              </span>
+
+              {user && (
+                <>
+                  <span className="font-mont text-gray-50 text-lg font-bold hover:text-blue-300">
+                    Hello, {user.name.length > 20 ? user.name.substring(0, 20) + "..." : user.name}
+                  </span>
+                  <span className="font-mont text-gray-50 text-lg font-bold hover:text-blue-300">
+                    <Link
+                      onClick={() => {
+                        localStorage.removeItem("token");
+                      }}
+                      to="/login"
+                    >
+                      <LogoutIcon style={{ color: "white", fontSize: 32 }} />
+                    </Link>
+                  </span>
+                </>
+              )}
+
+              {!user && (
+                <Link to="/login" onClick={toggleDrawer}>
+                  <span className="font-mont text-gray-50 text-lg font-bold hover:text-blue-300">Login</span>
+                </Link>
+              )}
+               {user && (
+          <div className='flex mt-4 md:mt-0'>
+            <Link to="/myprofile">
+              <AccountCircleOutlined style={{ color: "white", fontSize: 32 }} />
+            </Link>
+          </div>
+        )}
+            </nav>
+          </div>
+        </div>
+      )}
+    </div>
       {/* <Hero/> */}
           <div className='w-screen h-[calc(100vh-5rem)]'>
             <div className="bg-cover bg-[url('/public/hero2.png')] bg-center bg-no-repeat h-full w-full" >
@@ -191,8 +230,10 @@ const data = GetUserQuery();
        <Element name="aboutus">
         <section className="text-gray-600 body-font overflow-hidden">
             <div className="container py-24 flex items-center mx-auto">
-                <div className="flex flex-wrap">
-                    <img alt="feature" className="lg:w-1/2 w-5/6 lg:mx-0 mx-auto lg:h-96 h-64 object-cover object-center rounded" src={featured} />
+                <div className="flex flex-wrap ">
+                  <div className='lg:w-1/2 w-5/6 lg:mx-0 mx-auto lg:h-96 h-64 overflow-hidden rounded-lg'>
+                    <img alt="feature" className="object-cover object-center  shadow-lg  transition-transform duration-300 ease-in-out transform hover:scale-110" src={featured} />
+                   </div>
                     <div className="lg:w-1/2 w-5/6 lg:mx-0 mx-auto px-0 lg:px-8 py-8">
                         <h2 className="text-5xl font-bold text-blue-700 mb-5">{t("a1")}</h2>
                         <h1 className="text-4xl	text-gray-900 font-normal mb-4"> {t("a2")}</h1>
@@ -324,4 +365,4 @@ const data = GetUserQuery();
   )
 }
 
-export default Landing
+export default LandingPage

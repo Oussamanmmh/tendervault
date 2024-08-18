@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { createTender } from "../api/tender";
-import Navbar from './Navbar';
+import { createTender } from "../../api/tender";
+import Navbar from '../Navbar';
 import { toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
-import Loading from './Loading';
+import Loading from '../utils/Loading';
+import { GetMyDetailsQuery } from '../../api/user';
 
-const Createtender = () => {
+const CreateTender = () => {
   const [tenderInfo, setTenderInfo] = useState({
     title: '',
     description: '',
@@ -14,6 +15,7 @@ const Createtender = () => {
     category: '',
   });
    const [loadingCreate, setLoadingCreate] = useState(false);
+     const {data:user,isLoading:userLoading,isError:userError} = GetMyDetailsQuery();
  const showToast = (message, type = 'error') => {
     toast[type](message, {
       position: "top-center",
@@ -27,12 +29,15 @@ const Createtender = () => {
     });
   };
    let navigate = useNavigate();
-  if(loadingCreate){
+  if(loadingCreate||userLoading){
      return (
       <div style={{ minHeight: '800px', minWidth: '1200px' }}>
         <Loading />
       </div>
      )
+  }
+  if (userError) {
+    return <div>Error loading User.</div>;
   }
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -71,7 +76,7 @@ const Createtender = () => {
   };
 
   return (
-<div>   <Navbar/>
+<div>   <Navbar user={user}/>
      
     <div className="bg-gray-200 min-h-[90vh] flex flex-col items-center justify-center">
     
@@ -173,4 +178,4 @@ const Createtender = () => {
   );
 };
 
-export default Createtender;
+export default CreateTender;

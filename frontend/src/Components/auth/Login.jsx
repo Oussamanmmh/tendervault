@@ -18,7 +18,7 @@ import {
   AiOutlineLoading3Quarters,
 } from "react-icons/ai";
 import { useNavigate } from "react-router";
-import Loading from "../Loading";
+import Loading from "../utils/Loading";
 import login1 from "../../assets/login2.jpg"
 
 function Login() {

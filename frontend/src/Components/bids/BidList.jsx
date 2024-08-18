@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { getallbidsquery, createbid, acceptBid, rejectBid, deletebid } from '../api/bid';
-import { GetUserQuery } from '../api/user';
-import { tenderdetailsquery } from '../api/tender';
+import { getallbidsquery, createbid, acceptBid, rejectBid, deletebid } from '../../api/bid';
+import { GetMyDetailsQuery } from '../../api/user';
+import { tenderdetailsquery } from '../../api/tender';
 import { useParams } from 'react-router-dom';
-import Loading from './Loading';
+import Loading from '../utils/Loading';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BidCard from './BidCard';
-import Confirmation from './ConfirmationModal';
+import Confirmation from '../utils/ConfirmationModal';
 
 const BidList = () => {
   const { tenderId } = useParams();
@@ -22,7 +22,7 @@ const BidList = () => {
   const [loadingDelete, setLoadingDelete] = useState(false);
 
  
-  const { data: user, isLoading: userLoading, isError: userError } = GetUserQuery();
+  const { data: user, isLoading: userLoading, isError: userError } = GetMyDetailsQuery();
   const { data: tenderDetails, isLoading: tenderDetailsLoading, isError: tenderDetailsError, refetch: refetchTenderDetails } = tenderdetailsquery(tenderId);
   const { data: bids, isLoading: bidsLoading, isError: bidsError, refetch: refetchBids } = getallbidsquery(tenderId);
 
@@ -38,6 +38,17 @@ const BidList = () => {
       theme: "light",
     });
   };
+  if (userLoading || tenderDetailsLoading || bidsLoading) {
+    return (
+      <div style={{ minHeight: '800px', minWidth: '1200px' }}>
+        <Loading />
+      </div>
+    );
+  }
+
+  if (userError || tenderDetailsError || bidsError) {
+    return <div>Error loading data.</div>;
+  }
 
   const handleSort = (order) => setSortBy(order);
 
@@ -114,17 +125,6 @@ const BidList = () => {
   };
 
 
-  if (userLoading || tenderDetailsLoading || bidsLoading) {
-    return (
-      <div style={{ minHeight: '800px', minWidth: '1200px' }}>
-        <Loading />
-      </div>
-    );
-  }
-
-  if (userError || tenderDetailsError || bidsError) {
-    return <div>Error loading data.</div>;
-  }
 
   const sortedBids = [...bids];
   if (sortBy === 'lowToHigh') sortedBids.sort((a, b) => a.amount - b.amount);
