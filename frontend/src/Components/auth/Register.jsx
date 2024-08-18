@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { registerUser } from "../../api";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { useNavigate } from "react-router";
-import Loading from "../Loading";
+import Loading from "../utils/Loading";
 import register1 from "../../assets/register1.jpg"
 function Register() {
   const [showPassword, setShowPassword] = useState(false);

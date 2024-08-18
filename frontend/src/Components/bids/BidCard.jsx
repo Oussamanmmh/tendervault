@@ -1,12 +1,12 @@
 import React from 'react';
-import { GetUserQuery } from '../api/user';
-import { tenderdetailsquery } from '../api/tender';
-import Loading from './Loading';
+import { GetMyDetailsQuery } from '../../api/user';
+import { tenderdetailsquery } from '../../api/tender';
+import Loading from '../utils/Loading';
 import { useParams } from 'react-router';
 
 const BidCard = ({ bid, toAccept, toReject, toDelete, loadingAccept, loadingReject, loadingDelete }) => {
   const { tenderId } = useParams();
-  const { data: user, isLoading: userLoading, isError: userError } = GetUserQuery();
+  const { data: user, isLoading: userLoading, isError: userError } = GetMyDetailsQuery();
   const {
     data: tenderDetails,
     isLoading: tenderDetailsLoading,

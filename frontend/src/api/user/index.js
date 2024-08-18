@@ -22,14 +22,28 @@ const AuthAPI = () => {
     });
   }
 };
-const GetUser = async () => {
-  const { data } = await AuthAPI().get("/user/user-details");
+const GetMyDetails = async () => {
+  const { data } = await AuthAPI().get("/user/my-details");
   return data;
 };
-const GetUserQuery = () =>
+const GetUserDetails = async (userId) => {
+  const { data } = await AuthAPI().get(`/user/user-details/${userId}`);
+  return data;
+};
+const GetMyDetailsQuery = () =>
   useQuery({
-    queryKey: ["user-details"],
-    queryFn: () => GetUser(),
+    queryKey: ["my-details"],
+    queryFn: () => GetMyDetails(),
+    select: (data) => {
+      const res = data.message;
+      return res;
+
+    },
+  });
+const GetUserQuery = (userId) =>
+  useQuery({
+    queryKey: [`user-details-${userId}`],
+    queryFn: () => GetUserDetails(userId),
     select: (data) => {
       const res = data.message;
       return res;
@@ -65,4 +79,4 @@ const GetCompanyQuery = () =>
     },
   });
 
-export { GetUserQuery ,GetVendorQuery,GetCompanyQuery};
+export { GetUserQuery ,GetVendorQuery,GetCompanyQuery,GetMyDetailsQuery};

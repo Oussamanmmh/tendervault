@@ -1,36 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { getallcategoryquery, getalltenderquery, searchTendersQuery } from '../api/tender';
-import Navbar from './Navbar';
-import Loading from './Loading';
-import TenderCard from './TenderCard';
-import CategoryFilter from './CategoryFilter';
-import PriceRangeFilter from './PriceRangeFilter';
-import { GetUserQuery } from '../api/user';
-import Rightupbar from './Rightupbar';
-import Rightdownbar from './Rightdownbar';
-import { useDebounce } from '../hooks/useDebounce'; // Import the debounce hook
+import React, { useState } from 'react';
+import { getallcategoryquery, getalltenderquery, searchTendersQuery } from '../../api/tender';
+import Navbar from '../Navbar';
+import Loading from '../utils/Loading';
+import TenderCard from '../tender/TenderCard';
+import CategoryFilter from '../utils/CategoryFilter';
+import PriceRangeFilter from '../utils/PriceRangeFilter';
+import {  GetUserQuery } from '../../api/user';
+import Rightupbar from '../utils/Rightupbar';
+import Rightdownbar from '../utils/Rightdownbar';
+import { useDebounce } from '../../hooks/useDebounce';
+import { useParams } from 'react-router';
 
-const Home = () => {
+const UserProfile = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [showSoldTenders, setShowSoldTenders] = useState(false);
+  const [showSoldTenders, setShowSoldTenders] = useState(true);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [user, setUser] = useState();
 
-
-  
-const debouncedSearchTerm = useDebounce(searchTerm, 2000); 
+  const debouncedSearchTerm = useDebounce(searchTerm, 2000);
+    const {userId}=useParams();
   const { data: categories, isLoading: categoriesLoading, isError: categoriesError } = getallcategoryquery();
   const { data: tenders, isLoading: tendersLoading, isError: tendersError } = getalltenderquery();
   const { data: searchResults, isLoading: searchResultsLoading, isError: searchResultsError } = searchTendersQuery(debouncedSearchTerm);
 
-  const data = GetUserQuery();
+  const { data: user, isLoading: userLoading, isError: userError } = GetUserQuery(userId);
 
-  useEffect(() => {
-    setUser(data?.data);
-  }, [data.data]);
-
-  if (categoriesLoading || tendersLoading) {
+  if (categoriesLoading || tendersLoading || userLoading) {
     return (
       <div style={{ minHeight: '800px', minWidth: '1200px' }}>
         <Loading />
@@ -38,7 +33,7 @@ const debouncedSearchTerm = useDebounce(searchTerm, 2000);
     );
   }
 
-  if (categoriesError || tendersError) {
+  if (categoriesError || tendersError || userError) {
     return <div>Error loading data.</div>;
   }
 
@@ -52,17 +47,17 @@ const debouncedSearchTerm = useDebounce(searchTerm, 2000);
 
   const handleCategoryChange = (categoryId) => {
     const categoryName = categories[categoryId].toLowerCase();
-    setSelectedCategories(prev =>
+    setSelectedCategories((prev) =>
       prev.includes(categoryName)
-        ? prev.filter(name => name !== categoryName)
+        ? prev.filter((name) => name !== categoryName)
         : [...prev, categoryName]
     );
   };
 
   const handlePriceRangeChange = (priceRangeId) => {
-    setSelectedPriceRanges(prev =>
+    setSelectedPriceRanges((prev) =>
       prev.includes(priceRangeId)
-        ? prev.filter(range => range !== priceRangeId)
+        ? prev.filter((range) => range !== priceRangeId)
         : [...prev, priceRangeId]
     );
   };
@@ -71,17 +66,26 @@ const debouncedSearchTerm = useDebounce(searchTerm, 2000);
     setSearchTerm(query);
   };
 
-  const handleSearch = () => {
-  };
-
   const getFilteredTenders = () => {
-    if (debouncedSearchTerm !== '' && searchResults) {
-      return searchResults.data.filter((tender) => {
+    let res = [];
+
+    if (debouncedSearchTerm && searchResults) {
+      res = searchResults || [];
+
+      if (user.role === 'vendor') {
+        res = searchResults?.data.filter((tender) => tender.buyerId === user.id);
+      } else if (user.role === 'company') {
+        res = searchResults?.data.filter(
+          (tender) => tender.companyId === user.id && (showSoldTenders || tender.status !== 'sold')
+        );
+      }
+
+      return res?.filter((tender) => {
         const categoryName = tender.category.toLowerCase();
         const isCategorySelected = !selectedCategories.length || selectedCategories.includes(categoryName);
 
-        const isPriceInRange = !selectedPriceRanges.length || selectedPriceRanges.some(priceRangeId => {
-          const range = dummyPriceRanges.find(r => r.id === priceRangeId);
+        const isPriceInRange = !selectedPriceRanges.length || selectedPriceRanges.some((priceRangeId) => {
+          const range = dummyPriceRanges.find((r) => r.id === priceRangeId);
           return range && tender.cost >= range.minPrice && tender.cost <= range.maxPrice;
         });
 
@@ -90,21 +94,30 @@ const debouncedSearchTerm = useDebounce(searchTerm, 2000);
         return isCategorySelected && isPriceInRange && isSoldStatusMatch;
       });
     } else {
-      //for frontend search
-      return tenders.filter((tender) => {
+      res = tenders;
+
+      if (user.role === 'vendor') {
+        res = tenders.filter((tender) => tender.buyerId === user.id);
+      } else if (user.role === 'company') {
+        res = tenders.filter(
+          (tender) => tender.companyId === user.id && (showSoldTenders || tender.status !== 'sold')
+        );
+      }
+
+      return res.filter((tender) => {
         const isSearchMatch = !debouncedSearchTerm || tender.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
 
         const categoryName = tender.category.toLowerCase();
         const isCategorySelected = !selectedCategories.length || selectedCategories.includes(categoryName);
 
-        const isPriceInRange = !selectedPriceRanges.length || selectedPriceRanges.some(priceRangeId => {
-          const range = dummyPriceRanges.find(r => r.id === priceRangeId);
+        const isPriceInRange = !selectedPriceRanges.length || selectedPriceRanges.some((priceRangeId) => {
+          const range = dummyPriceRanges.find((r) => r.id === priceRangeId);
           return range && tender.cost >= range.minPrice && tender.cost <= range.maxPrice;
         });
 
         const isSoldStatusMatch = !showSoldTenders || tender.status === 'sold';
 
-        return isCategorySelected && isPriceInRange && isSoldStatusMatch;
+        return isSearchMatch && isCategorySelected && isPriceInRange && isSoldStatusMatch;
       });
     }
   };
@@ -112,17 +125,17 @@ const debouncedSearchTerm = useDebounce(searchTerm, 2000);
   const filteredTenders = getFilteredTenders();
 
   const renderTenders = () => {
-    if (debouncedSearchTerm !== '' && searchResults && searchResults.length === 0) {
+    if (debouncedSearchTerm && searchResults && searchResults?.length === 0) {
       return <div className="text-gray-600">No matches found.</div>;
     }
 
-    if (filteredTenders.length === 0) {
+    if (filteredTenders?.length === 0) {
       return <p>No tenders available.</p>;
     }
 
     return (
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 p-4">
-        {filteredTenders.map((tender) => (
+        {filteredTenders?.map((tender) => (
           <TenderCard key={tender.id} tender={tender} user={user} />
         ))}
       </div>
@@ -131,11 +144,11 @@ const debouncedSearchTerm = useDebounce(searchTerm, 2000);
 
   return (
     <div className="t">
-      <Navbar 
-        searchTerm={searchTerm} 
-        onSearchChange={handleSearchChange} 
-        handleSearch={handleSearch} 
-        user={user} 
+      <Navbar
+        searchTerm={searchTerm}
+        onSearchChange={handleSearchChange}
+        handleSearch={() => {}}
+        user={user}
       />
       <div className="flex flex-row h-[90vh]">
         <div className="hidden lg:grid justify-items-center w-[43%] bg-gray-200">
@@ -151,19 +164,27 @@ const debouncedSearchTerm = useDebounce(searchTerm, 2000);
           />
         </div>
         <div className="bg-gray-200 w-full overflow-y-scroll scrollbar-hide">
+          <div className="p-4 text-center">
+            <div className="relative inline-block">
+              <img
+                src={user.profileImage || 'https://png.pngtree.com/png-vector/20200614/ourlarge/pngtree-businessman-user-avatar-character-vector-illustration-png-image_2242909.jpg'}
+                alt={user.name}
+                className="w-24 h-24 rounded-full object-cover mx-auto mb-4"
+              />
+              <div className="absolute bottom-0 right-0 h-6 w-6 bg-green-400 border-2 border-white rounded-full"></div>
+            </div>
+            <h2 className="text-2xl font-semibold">{user.name}</h2>
+            <p className="text-gray-600">{user.role}</p>
+          </div>
           <div className="flex justify-between p-4 px-16">
             <h1
-              className={`cursor-pointer font-bold text-xl ${
-                !showSoldTenders ? 'text-blue-700' : 'text-gray-500'
-              }`}
+              className={`cursor-pointer font-bold text-xl ${!showSoldTenders ? 'text-blue-700' : 'text-gray-500'}`}
               onClick={() => setShowSoldTenders(false)}
             >
               Unsold Tenders
             </h1>
             <h1
-              className={`cursor-pointer font-bold text-xl ${
-                showSoldTenders ? 'text-blue-700' : 'text-gray-500'
-              }`}
+              className={`cursor-pointer font-bold text-xl ${showSoldTenders ? 'text-blue-700' : 'text-gray-500'}`}
               onClick={() => setShowSoldTenders(true)}
             >
               Sold Tenders
@@ -180,4 +201,4 @@ const debouncedSearchTerm = useDebounce(searchTerm, 2000);
   );
 };
 
-export default Home;
+export default UserProfile;

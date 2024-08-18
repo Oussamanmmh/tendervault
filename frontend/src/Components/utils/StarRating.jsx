@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { getalltenderquery, reviewTender } from '../api/tender';
+import { getalltenderquery, reviewTender } from '../../api/tender';
 import {  toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
