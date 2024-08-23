@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { AiOutlineSearch, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
-import { RiSearchLine } from 'react-icons/ri';
-import { AccountCircleOutlined } from '@mui/icons-material';
-import LogoutIcon from '@mui/icons-material/Logout';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { AiOutlineSearch, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
+import { RiSearchLine } from "react-icons/ri";
+import { AccountCircleOutlined } from "@mui/icons-material";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const Navbar = ({ searchTerm, onSearchChange, handleSearch, user }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -13,15 +13,18 @@ const Navbar = ({ searchTerm, onSearchChange, handleSearch, user }) => {
   };
 
   return (
-    <div className='flex flex-col bg-blue-950 w-full sticky top-0 z-50'>
+    <div className="flex flex-col bg-blue-950 w-full sticky top-0 z-50">
       <div className="container mx-auto flex flex-wrap p-3 flex-row sm:flex-row items-center justify-between">
         <Link to="/">
           <div>
-            <span className='font-mont text-blue-300 text-4xl font-bold'>Tender</span>
-            <span className='font-mont text-gray-50 text-xl font-bold'>Vault</span>
+            <span className="font-mont text-blue-300 text-4xl font-bold">
+              Tender
+            </span>
+            <span className="font-mont text-gray-50 text-xl font-bold">
+              Vault
+            </span>
           </div>
         </Link>
-
 
         <div className="sm:hidden flex items-center">
           <button onClick={toggleDrawer}>
@@ -33,7 +36,6 @@ const Navbar = ({ searchTerm, onSearchChange, handleSearch, user }) => {
           </button>
         </div>
 
-      
         <div className="relative flex-1 px-4 hidden md:block">
           <div className="absolute color-gray-900 inset-y-0 left-0 flex items-center pl-6 pointer-events-none">
             <AiOutlineSearch />
@@ -55,10 +57,11 @@ const Navbar = ({ searchTerm, onSearchChange, handleSearch, user }) => {
           </button>
         </div>
 
-      
         <nav className="hidden md:flex md:ml-auto flex-wrap pl-3 items-center text-base justify-center">
           <Link to="/home">
-            <span className="font-mont text-gray-50 text-xl font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">Home</span>
+            <span className="font-mont text-gray-50 text-xl font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">
+              Home
+            </span>
           </Link>
           {user && user.role === "company" && (
             <Link to="/createtender">
@@ -68,9 +71,10 @@ const Navbar = ({ searchTerm, onSearchChange, handleSearch, user }) => {
             </Link>
           )}
           <span className="font-mont text-gray-50 text-lg font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">
-            Hello, {
-            user?.name.length>20? user?.name.substring(0, 20) + "..." :  user?.name
-            }
+            Hello,{" "}
+            {user?.name.length > 20
+              ? user?.name.substring(0, 20) + "..."
+              : user?.name}
           </span>
           <span className="font-mont text-gray-50 text-lg font-bold mr-10 hover:text-blue-300 hover:cursor-pointer">
             <Link
@@ -84,15 +88,13 @@ const Navbar = ({ searchTerm, onSearchChange, handleSearch, user }) => {
           </span>
         </nav>
 
-   
-        <div className='hidden md:flex mt-4 md:mt-0'>
+        <div className="hidden md:flex mt-4 md:mt-0">
           <Link to="/myprofile">
             <AccountCircleOutlined style={{ color: "white", fontSize: 32 }} />
           </Link>
         </div>
       </div>
 
-   
       {isDrawerOpen && (
         <div className="fixed inset-0 z-40 flex">
           <div className="w-64 h-full bg-blue-950 p-5 shadow-lg fixed right-0 top-0 z-50">
@@ -101,7 +103,9 @@ const Navbar = ({ searchTerm, onSearchChange, handleSearch, user }) => {
             </button>
             <nav className="flex flex-col space-y-4">
               <Link to="/home" onClick={toggleDrawer}>
-                <span className="font-mont text-gray-50 text-lg font-bold hover:text-blue-300">Home</span>
+                <span className="font-mont text-gray-50 text-lg font-bold hover:text-blue-300">
+                  Home
+                </span>
               </Link>
               {user && user.role === "company" && (
                 <Link to="/createtender" onClick={toggleDrawer}>
@@ -111,7 +115,10 @@ const Navbar = ({ searchTerm, onSearchChange, handleSearch, user }) => {
                 </Link>
               )}
               <span className="font-mont text-gray-50 text-lg font-bold hover:text-blue-300">
-                Hello, { user?.name.length>20? user?.name.substring(0, 20) + "..." :  user?.name}
+                Hello,{" "}
+                {user?.name.length > 20
+                  ? user?.name.substring(0, 20) + "..."
+                  : user?.name}
               </span>
               <span className="font-mont text-gray-50 text-lg font-bold hover:text-blue-300">
                 <Link
@@ -124,7 +131,9 @@ const Navbar = ({ searchTerm, onSearchChange, handleSearch, user }) => {
                 </Link>
               </span>
               <Link to="/myprofile" onClick={toggleDrawer}>
-                <AccountCircleOutlined style={{ color: "white", fontSize: 32 }} />
+                <AccountCircleOutlined
+                  style={{ color: "white", fontSize: 32 }}
+                />
               </Link>
             </nav>
           </div>

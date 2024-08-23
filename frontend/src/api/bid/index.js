@@ -21,7 +21,6 @@ const AuthAPI = () => {
   }
 };
 
-
 const createbid = async (amount, tenderId) => {
   const { data } = await AuthAPI().post(`/user/createbid/${tenderId}`, {
     amount,
@@ -29,10 +28,7 @@ const createbid = async (amount, tenderId) => {
   return data;
 };
 const deletebid = async (bidId) => {
-  
-  const { data } = await AuthAPI().delete(
-    `/user/deletebid/${bidId}`
-  );
+  const { data } = await AuthAPI().delete(`/user/deletebid/${bidId}`);
   return data;
 };
 
@@ -46,12 +42,8 @@ const rejectBid = async (bidId) => {
   return data;
 };
 const getallbids = async (tenderId) => {
-
-
   try {
-    const { data } = await AuthAPI().get(
-      `/user/getallbids/${tenderId}`
-    );
+    const { data } = await AuthAPI().get(`/user/getallbids/${tenderId}`);
     return data;
   } catch (error) {
     console.error(error);
@@ -61,13 +53,10 @@ const getallbids = async (tenderId) => {
 
 const getallbidsquery = (tenderId) =>
   useQuery({
-    queryKey: ["getallbids",tenderId],
+    queryKey: ["getallbids", tenderId],
     queryFn: () => getallbids(tenderId),
     select: (data) => {
       return data.data;
     },
   });
-  export {
-  getallbidsquery,
- createbid,deletebid,acceptBid,rejectBid
-};
+export { getallbidsquery, createbid, deletebid, acceptBid, rejectBid };

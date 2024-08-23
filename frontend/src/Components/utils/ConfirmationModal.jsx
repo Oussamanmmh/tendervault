@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const Confirmation = ({ message, onConfirm, onCancel, confirmButtonClass }) => {
   return (
@@ -8,7 +8,9 @@ const Confirmation = ({ message, onConfirm, onCancel, confirmButtonClass }) => {
         <div className="mt-4 space-x-4">
           <button
             onClick={onConfirm}
-            className={`py-2 px-4 rounded-lg ${confirmButtonClass || 'bg-green-500 hover:bg-green-600 text-white'}`}
+            className={`py-2 px-4 rounded-lg ${
+              confirmButtonClass || "bg-green-500 hover:bg-green-600 text-white"
+            }`}
           >
             Confirm
           </button>
