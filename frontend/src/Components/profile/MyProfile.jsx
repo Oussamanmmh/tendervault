@@ -1,35 +1,58 @@
-import React, { useState } from 'react';
-import { deleteTender, getallcategoryquery, getalltenderquery, getMyTendersQuery, searchTendersQuery } from '../../api/tender';
-import Navbar from '../Navbar';
-import Loading from '../utils/Loading';
-import TenderCard from '../tender/TenderCard';
-import CategoryFilter from '../utils/CategoryFilter';
-import PriceRangeFilter from '../utils/PriceRangeFilter';
-import { GetMyDetailsQuery } from '../../api/user';
-import Rightupbar from '../utils/Rightupbar';
-import Rightdownbar from '../utils/Rightdownbar';
-import { useDebounce } from '../../hooks/useDebounce';
-import Confirmation from '../utils/ConfirmationModal';
+import React, { useState } from "react";
+import {
+  deleteTender,
+  getallcategoryquery,
+  getalltenderquery,
+  getMyTendersQuery,
+  searchTendersQuery,
+} from "../../api/tender";
+import Navbar from "../Navbar";
+import Loading from "../utils/Loading";
+import TenderCard from "../tender/TenderCard";
+import CategoryFilter from "../utils/CategoryFilter";
+import PriceRangeFilter from "../utils/PriceRangeFilter";
+import { GetMyDetailsQuery } from "../../api/user";
+import Rightupbar from "../utils/Rightupbar";
+import Rightdownbar from "../utils/Rightdownbar";
+import { useDebounce } from "../../hooks/useDebounce";
+import Confirmation from "../utils/ConfirmationModal";
 
 const MyProfile = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showSoldTenders, setShowSoldTenders] = useState(true);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedTender, setSelectedTender] = useState(null);
   const [confirmationType, setConfirmationType] = useState(null);
-    const [loadingDelete, setLoadingDelete] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
   const debouncedSearchTerm = useDebounce(searchTerm, 2000);
 
-  const { data: categories, isLoading: categoriesLoading, isError: categoriesError } = getallcategoryquery();
-  const { data: tenders, isLoading: tendersLoading, isError: tendersError,refetch:refetchAllTenders } = getalltenderquery();
-  const { data: searchResults, isLoading: searchResultsLoading, isError: searchResultsError } = searchTendersQuery(debouncedSearchTerm);
-const {refetch:refetchMyTenders}=getMyTendersQuery();
-  const { data: user, isLoading: userLoading, isError: userError } = GetMyDetailsQuery();
+  const {
+    data: categories,
+    isLoading: categoriesLoading,
+    isError: categoriesError,
+  } = getallcategoryquery();
+  const {
+    data: tenders,
+    isLoading: tendersLoading,
+    isError: tendersError,
+    refetch: refetchAllTenders,
+  } = getalltenderquery();
+  const {
+    data: searchResults,
+    isLoading: searchResultsLoading,
+    isError: searchResultsError,
+  } = searchTendersQuery(debouncedSearchTerm);
+  const { refetch: refetchMyTenders } = getMyTendersQuery();
+  const {
+    data: user,
+    isLoading: userLoading,
+    isError: userError,
+  } = GetMyDetailsQuery();
 
   if (categoriesLoading || tendersLoading || userLoading) {
     return (
-      <div style={{ minHeight: '800px', minWidth: '1200px' }}>
+      <div style={{ minHeight: "800px", minWidth: "1200px" }}>
         <Loading />
       </div>
     );
@@ -40,11 +63,11 @@ const {refetch:refetchMyTenders}=getMyTendersQuery();
   }
 
   const dummyPriceRanges = [
-    { id: 1, label: 'Under 1000', minPrice: 0, maxPrice: 1000 },
-    { id: 2, label: '1001 - 1500', minPrice: 1001, maxPrice: 1500 },
-    { id: 3, label: '1501 - 2000', minPrice: 1501, maxPrice: 2000 },
-    { id: 4, label: '2001 - 2500', minPrice: 2001, maxPrice: 2500 },
-    { id: 5, label: 'Over 2500', minPrice: 2501, maxPrice: Infinity },
+    { id: 1, label: "Under 1000", minPrice: 0, maxPrice: 1000 },
+    { id: 2, label: "1001 - 1500", minPrice: 1001, maxPrice: 1500 },
+    { id: 3, label: "1501 - 2000", minPrice: 1501, maxPrice: 2000 },
+    { id: 4, label: "2001 - 2500", minPrice: 2001, maxPrice: 2500 },
+    { id: 5, label: "Over 2500", minPrice: 2501, maxPrice: Infinity },
   ];
 
   const handleCategoryChange = (categoryId) => {
@@ -67,32 +90,28 @@ const {refetch:refetchMyTenders}=getMyTendersQuery();
   const handleSearchChange = (query) => {
     setSearchTerm(query);
   };
- 
 
-
-   const handleConfirmAction = async () => {
+  const handleConfirmAction = async () => {
     try {
       switch (confirmationType) {
-        case 'delete':
+        case "delete":
           setLoadingDelete(true);
           await deleteTender(selectedTender.id);
-          
-         refetchAllTenders();
+
+          refetchAllTenders();
           refetchMyTenders();
-     
-          showToast('Tender deleted successfully', 'success');
+
+          showToast("Tender deleted successfully", "success");
           break;
-       
+
         default:
           break;
       }
-
-      
     } catch (error) {
-      showToast('Some Error Occured in Deleting Tender', 'error');
+      showToast("Some Error Occured in Deleting Tender", "error");
     } finally {
       setLoadingDelete(false);
-     
+
       setSelectedTender(null);
       setConfirmationType(null);
     }
@@ -104,52 +123,83 @@ const {refetch:refetchMyTenders}=getMyTendersQuery();
     if (debouncedSearchTerm && searchResults) {
       res = searchResults || [];
 
-      if (user.role === 'vendor') {
-        res = searchResults?.data.filter((tender) => tender.buyerId === user.id);
-      } else if (user.role === 'company') {
+      if (user.role === "vendor") {
         res = searchResults?.data.filter(
-          (tender) => tender.companyId === user.id && (showSoldTenders || tender.status !== 'sold')
+          (tender) => tender.buyerId === user.id
+        );
+      } else if (user.role === "company") {
+        res = searchResults?.data.filter(
+          (tender) =>
+            tender.companyId === user.id &&
+            (showSoldTenders || tender.status !== "sold")
         );
       }
 
       return res?.filter((tender) => {
         const categoryName = tender.category.toLowerCase();
-        const isCategorySelected = !selectedCategories.length || selectedCategories.includes(categoryName);
+        const isCategorySelected =
+          !selectedCategories.length ||
+          selectedCategories.includes(categoryName);
 
-        const isPriceInRange = !selectedPriceRanges.length || selectedPriceRanges.some((priceRangeId) => {
-          const range = dummyPriceRanges.find((r) => r.id === priceRangeId);
-          return range && tender.cost >= range.minPrice && tender.cost <= range.maxPrice;
-        });
+        const isPriceInRange =
+          !selectedPriceRanges.length ||
+          selectedPriceRanges.some((priceRangeId) => {
+            const range = dummyPriceRanges.find((r) => r.id === priceRangeId);
+            return (
+              range &&
+              tender.cost >= range.minPrice &&
+              tender.cost <= range.maxPrice
+            );
+          });
 
-        const isSoldStatusMatch = !showSoldTenders || tender.status === 'sold';
+        const isSoldStatusMatch = !showSoldTenders || tender.status === "sold";
 
         return isCategorySelected && isPriceInRange && isSoldStatusMatch;
       });
     } else {
       res = tenders;
 
-      if (user.role === 'vendor') {
+      if (user.role === "vendor") {
         res = tenders.filter((tender) => tender.buyerId === user.id);
-      } else if (user.role === 'company') {
+      } else if (user.role === "company") {
         res = tenders.filter(
-          (tender) => tender.companyId === user.id && (showSoldTenders || tender.status !== 'sold')
+          (tender) =>
+            tender.companyId === user.id &&
+            (showSoldTenders || tender.status !== "sold")
         );
       }
 
       return res.filter((tender) => {
-        const isSearchMatch = !debouncedSearchTerm || tender.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+        const isSearchMatch =
+          !debouncedSearchTerm ||
+          tender.title
+            .toLowerCase()
+            .includes(debouncedSearchTerm.toLowerCase());
 
         const categoryName = tender.category.toLowerCase();
-        const isCategorySelected = !selectedCategories.length || selectedCategories.includes(categoryName);
+        const isCategorySelected =
+          !selectedCategories.length ||
+          selectedCategories.includes(categoryName);
 
-        const isPriceInRange = !selectedPriceRanges.length || selectedPriceRanges.some((priceRangeId) => {
-          const range = dummyPriceRanges.find((r) => r.id === priceRangeId);
-          return range && tender.cost >= range.minPrice && tender.cost <= range.maxPrice;
-        });
+        const isPriceInRange =
+          !selectedPriceRanges.length ||
+          selectedPriceRanges.some((priceRangeId) => {
+            const range = dummyPriceRanges.find((r) => r.id === priceRangeId);
+            return (
+              range &&
+              tender.cost >= range.minPrice &&
+              tender.cost <= range.maxPrice
+            );
+          });
 
-        const isSoldStatusMatch = !showSoldTenders || tender.status === 'sold';
+        const isSoldStatusMatch = !showSoldTenders || tender.status === "sold";
 
-        return isSearchMatch && isCategorySelected && isPriceInRange && isSoldStatusMatch;
+        return (
+          isSearchMatch &&
+          isCategorySelected &&
+          isPriceInRange &&
+          isSoldStatusMatch
+        );
       });
     }
   };
@@ -168,10 +218,16 @@ const {refetch:refetchMyTenders}=getMyTendersQuery();
     return (
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 p-4">
         {filteredTenders?.map((tender) => (
-          <TenderCard key={tender.id} tender={tender} user={user} 
-           toDelete={() => { setSelectedTender(tender); setConfirmationType('delete'); }}
+          <TenderCard
+            key={tender.id}
+            tender={tender}
+            user={user}
+            toDelete={() => {
+              setSelectedTender(tender);
+              setConfirmationType("delete");
+            }}
             loadingDelete={loadingDelete}
-           />
+          />
         ))}
       </div>
     );
@@ -202,7 +258,10 @@ const {refetch:refetchMyTenders}=getMyTendersQuery();
           <div className="p-4 text-center">
             <div className="relative inline-block">
               <img
-                src={user.profileImage || 'https://png.pngtree.com/png-vector/20200614/ourlarge/pngtree-businessman-user-avatar-character-vector-illustration-png-image_2242909.jpg'}
+                src={
+                  user.profileImage ||
+                  "https://png.pngtree.com/png-vector/20200614/ourlarge/pngtree-businessman-user-avatar-character-vector-illustration-png-image_2242909.jpg"
+                }
                 alt={user.name}
                 className="w-24 h-24 rounded-full object-cover mx-auto mb-4"
               />
@@ -213,13 +272,17 @@ const {refetch:refetchMyTenders}=getMyTendersQuery();
           </div>
           <div className="flex justify-between p-4 px-16">
             <h1
-              className={`cursor-pointer font-bold text-xl ${!showSoldTenders ? 'text-blue-700' : 'text-gray-500'}`}
+              className={`cursor-pointer font-bold text-xl ${
+                !showSoldTenders ? "text-blue-700" : "text-gray-500"
+              }`}
               onClick={() => setShowSoldTenders(false)}
             >
               Unsold Tenders
             </h1>
             <h1
-              className={`cursor-pointer font-bold text-xl ${showSoldTenders ? 'text-blue-700' : 'text-gray-500'}`}
+              className={`cursor-pointer font-bold text-xl ${
+                showSoldTenders ? "text-blue-700" : "text-gray-500"
+              }`}
               onClick={() => setShowSoldTenders(true)}
             >
               Sold Tenders
@@ -232,16 +295,22 @@ const {refetch:refetchMyTenders}=getMyTendersQuery();
           <Rightdownbar />
         </div>
       </div>
-        {selectedTender && (
+      {selectedTender && (
         <Confirmation
           message={
-            confirmationType === 'delete'
-              ? 'Are you sure you want to delete this Tender?':'Not valid action'
+            confirmationType === "delete"
+              ? "Are you sure you want to delete this Tender?"
+              : "Not valid action"
           }
           onConfirm={handleConfirmAction}
-          onCancel={() => { setSelectedTender(null); setConfirmationType(null); }}
+          onCancel={() => {
+            setSelectedTender(null);
+            setConfirmationType(null);
+          }}
           confirmButtonClass={
-            confirmationType === 'delete' ?  'bg-red-500 hover:bg-red-600 text-white':'bg-red-500 hover:bg-red-600 text-white'
+            confirmationType === "delete"
+              ? "bg-red-500 hover:bg-red-600 text-white"
+              : "bg-red-500 hover:bg-red-600 text-white"
           }
         />
       )}

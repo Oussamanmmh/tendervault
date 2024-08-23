@@ -1,28 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import Navbar from '../Navbar';
-import { updateTender, tenderdetailsquery } from '../../api/tender';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import {  toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { GetMyDetailsQuery } from '../../api/user';
+import React, { useState, useEffect } from "react";
+import Navbar from "../Navbar";
+import { updateTender, tenderdetailsquery } from "../../api/tender";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { GetMyDetailsQuery } from "../../api/user";
 
-import Loading from '../utils/Loading';
+import Loading from "../utils/Loading";
 
 const UpdateTender = () => {
   const { tenderId } = useParams();
-  const { data: tenderDetails, isLoading, isError } = tenderdetailsquery(tenderId);
-     const {data:user,isLoading:userLoading,isError:userError} = GetMyDetailsQuery();
+  const {
+    data: tenderDetails,
+    isLoading,
+    isError,
+  } = tenderdetailsquery(tenderId);
+  const {
+    data: user,
+    isLoading: userLoading,
+    isError: userError,
+  } = GetMyDetailsQuery();
 
-  const [tenderName, setTenderName] = useState('');
-  const [description, setDescription] = useState('');
+  const [tenderName, setTenderName] = useState("");
+  const [description, setDescription] = useState("");
   const [cost, setCost] = useState(0);
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState("");
   const [document, setDocument] = useState(null);
   const [tenderImage, setTenderImage] = useState(null);
-    const [loadingUpdate, setLoadingUpdate] = useState(false);
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
   let navigate = useNavigate();
-  const showToast = (message, type = 'error') => {
+  const showToast = (message, type = "error") => {
     toast[type](message, {
       position: "top-center",
       autoClose: 5000,
@@ -37,22 +45,22 @@ const UpdateTender = () => {
   useEffect(() => {
     if (!isLoading && !isError && tenderDetails) {
       const { title, description, cost, category } = tenderDetails;
-      setTenderName(title || '');
-      setDescription(description || '');
+      setTenderName(title || "");
+      setDescription(description || "");
       setCost(parseFloat(cost) || 0);
-      setCategory(category || '');
+      setCategory(category || "");
     }
   }, [tenderDetails, isLoading, isError]);
 
-  if (isLoading||loadingUpdate||userLoading) {
+  if (isLoading || loadingUpdate || userLoading) {
     return (
-      <div style={{ minHeight: '800px', minWidth: '1200px' }}>
+      <div style={{ minHeight: "800px", minWidth: "1200px" }}>
         <Loading />
       </div>
     );
   }
 
-  if (isError||userError) {
+  if (isError || userError) {
     return <div>Error loading data.</div>;
   }
 
@@ -65,30 +73,27 @@ const UpdateTender = () => {
       cost: parseFloat(cost),
       category,
       image: tenderImage,
-
     };
     try {
       setLoadingUpdate(true);
-    const result = await updateTender(tenderId, updatedTender);
+      const result = await updateTender(tenderId, updatedTender);
 
-    if (result.success) {
-      setTenderName('');
-      setDescription('');
-      setCost(0);
-      setCategory('');
-      setDocument(null);
-      setTenderImage(null);
-      showToast('Tender Updated Successfully', 'success');
-      navigate('/myprofile');
-    } 
+      if (result.success) {
+        setTenderName("");
+        setDescription("");
+        setCost(0);
+        setCategory("");
+        setDocument(null);
+        setTenderImage(null);
+        showToast("Tender Updated Successfully", "success");
+        navigate("/myprofile");
+      }
     } catch (error) {
       console.error(result.message);
-      showToast('Some Error occurred in updating tender', 'error');
-    }
-    finally{
+      showToast("Some Error occurred in updating tender", "error");
+    } finally {
       setLoadingUpdate(false);
     }
-
   };
 
   return (
@@ -102,7 +107,10 @@ const UpdateTender = () => {
           </h1>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="tenderName" className="block text-gray-700 text-sm font-bold">
+              <label
+                htmlFor="tenderName"
+                className="block text-gray-700 text-sm font-bold"
+              >
                 Tender Name
               </label>
               <input
@@ -115,7 +123,10 @@ const UpdateTender = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="description" className="block text-gray-700 text-sm font-bold">
+              <label
+                htmlFor="description"
+                className="block text-gray-700 text-sm font-bold"
+              >
                 Tender Description
               </label>
               <textarea
@@ -128,7 +139,10 @@ const UpdateTender = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="cost" className="block text-gray-700 text-sm font-bold">
+              <label
+                htmlFor="cost"
+                className="block text-gray-700 text-sm font-bold"
+              >
                 Cost
               </label>
               <input
@@ -141,7 +155,10 @@ const UpdateTender = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="category" className="block text-gray-700 text-sm font-bold">
+              <label
+                htmlFor="category"
+                className="block text-gray-700 text-sm font-bold"
+              >
                 Category
               </label>
               <input
@@ -154,7 +171,10 @@ const UpdateTender = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="image" className="block text-gray-700 text-sm font-bold">
+              <label
+                htmlFor="image"
+                className="block text-gray-700 text-sm font-bold"
+              >
                 Tender Image
               </label>
               <input
@@ -166,7 +186,10 @@ const UpdateTender = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="document" className="block text-gray-700 text-sm font-bold">
+              <label
+                htmlFor="document"
+                className="block text-gray-700 text-sm font-bold"
+              >
                 Upload Document
               </label>
               <input
@@ -186,7 +209,6 @@ const UpdateTender = () => {
           </form>
         </div>
       </div>
-      
     </div>
   );
 };

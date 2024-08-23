@@ -1,21 +1,24 @@
-import React, { useState } from 'react';
-import { getallcategoryquery } from '../../api/tender';
-import Loading from './Loading';
+import React, { useState } from "react";
+import { getallcategoryquery } from "../../api/tender";
+import Loading from "./Loading";
 
 const Leftupbar = () => {
-  const { data: categories, isLoading: categoriesLoading, isError: categoriesError } = getallcategoryquery();
+  const {
+    data: categories,
+    isLoading: categoriesLoading,
+    isError: categoriesError,
+  } = getallcategoryquery();
 
   const [selectedCategories, setSelectedCategories] = useState([]);
 
-
-  const fetchTendersByCategories = (selectedCategories) => {
- 
-  };
+  const fetchTendersByCategories = (selectedCategories) => {};
 
   const handleCategoryChange = (categoryId) => {
     const categoryName = categories[categoryId].toLowerCase();
     if (selectedCategories.includes(categoryName)) {
-      setSelectedCategories(selectedCategories.filter((name) => name !== categoryName));
+      setSelectedCategories(
+        selectedCategories.filter((name) => name !== categoryName)
+      );
     } else {
       setSelectedCategories([...selectedCategories, categoryName]);
     }
@@ -24,9 +27,11 @@ const Leftupbar = () => {
   };
 
   if (categoriesLoading) {
-    return <div style={{ minHeight: '800px',minWidth:'1200px' }}>
+    return (
+      <div style={{ minHeight: "800px", minWidth: "1200px" }}>
         <Loading />
       </div>
+    );
   }
 
   if (categoriesError) {
@@ -51,14 +56,14 @@ const Leftupbar = () => {
               id={`category-${index}`}
               checked={selectedCategories.includes(category.toLowerCase())}
               onChange={() => handleCategoryChange(index)}
-              style={{ transform: 'scale(1.5)' }}
+              style={{ transform: "scale(1.5)" }}
             />
             <label
               htmlFor={`category-${index}`}
               className={`text-base ${
                 selectedCategories.includes(category.toLowerCase())
-                  ? 'text-gray-600'
-                  : 'text-gray-400'
+                  ? "text-gray-600"
+                  : "text-gray-400"
               } font-semibold`}
             >
               {category}

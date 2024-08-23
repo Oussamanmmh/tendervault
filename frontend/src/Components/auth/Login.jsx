@@ -8,8 +8,8 @@ import React, {
   useState,
 } from "react";
 import { useForm } from "react-hook-form";
-import {  toast } from 'react-toastify';
-  import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { loginUser } from "../../api";
 import {
   AiFillEye,
@@ -19,7 +19,7 @@ import {
 } from "react-icons/ai";
 import { useNavigate } from "react-router";
 import Loading from "../utils/Loading";
-import login1 from "../../assets/login2.jpg"
+import login1 from "../../assets/login2.jpg";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -45,7 +45,7 @@ function Login() {
       confirmPassword: "",
     },
   });
-   const showToast = (message, type = 'error') => {
+  const showToast = (message, type = "error") => {
     toast[type](message, {
       position: "top-center",
       autoClose: 5000,
@@ -65,19 +65,19 @@ function Login() {
       const { data } = response;
       if (response.status === 200) {
         localStorage.setItem("token", data.message.accessToken);
-       // toast.success("Login Successful", { id: data.message });
-       showToast('Login Successful', 'success');
+        // toast.success("Login Successful", { id: data.message });
+        showToast("Login Successful", "success");
         navigate("/");
       }
       reset();
-      
+
       setApiError(null);
       setValue("email", "");
       setShowPassword(false);
     } catch (err) {
       setApiError("please verify your credentials");
-       showToast('Invalid Credentials', 'error');
-       
+      showToast("Invalid Credentials", "error");
+
       setbutton(false);
     }
     reset();
@@ -87,17 +87,18 @@ function Login() {
   return (
     <div className="flex">
       <div className=" hidden lg:block w-1/2 h-screen bg-blue-400">
-        <img
-          className="object-cover h-full w-full"
-          src={login1}
-        />
+        <img className="object-cover h-full w-full" src={login1} />
       </div>
       <div className="flex lg:w-1/2  sm:w-full  justify-center p-16">
         <div className="flex flex-col gap-4">
           <div className="p-4 m-4">
-                  <span className='font-mont text-blue-800 text-4xl font-bold'>Tender</span>
-                  <span className='font-mont text-blue-400 text-4xl font-bold'>Vault</span>
-               </div>
+            <span className="font-mont text-blue-800 text-4xl font-bold">
+              Tender
+            </span>
+            <span className="font-mont text-blue-400 text-4xl font-bold">
+              Vault
+            </span>
+          </div>
 
           <p className="text-gray-500 ">Existing User? </p>
           <h1 className="font-bold text-3xl font-mono">Login</h1>
@@ -170,7 +171,6 @@ function Login() {
           </form>
         </div>
       </div>
-       
     </div>
   );
 }

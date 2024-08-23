@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
-import { getallbidsquery, createbid, acceptBid, rejectBid, deletebid } from '../../api/bid';
-import { GetMyDetailsQuery } from '../../api/user';
-import { tenderdetailsquery } from '../../api/tender';
-import { useParams } from 'react-router-dom';
-import Loading from '../utils/Loading';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import BidCard from './BidCard';
-import Confirmation from '../utils/ConfirmationModal';
+import React, { useState } from "react";
+import {
+  getallbidsquery,
+  createbid,
+  acceptBid,
+  rejectBid,
+  deletebid,
+} from "../../api/bid";
+import { GetMyDetailsQuery } from "../../api/user";
+import { tenderdetailsquery } from "../../api/tender";
+import { useParams } from "react-router-dom";
+import Loading from "../utils/Loading";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import BidCard from "./BidCard";
+import Confirmation from "../utils/ConfirmationModal";
 
 const BidList = () => {
   const { tenderId } = useParams();
@@ -21,12 +27,25 @@ const BidList = () => {
   const [loadingReject, setLoadingReject] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
 
- 
-  const { data: user, isLoading: userLoading, isError: userError } = GetMyDetailsQuery();
-  const { data: tenderDetails, isLoading: tenderDetailsLoading, isError: tenderDetailsError, refetch: refetchTenderDetails } = tenderdetailsquery(tenderId);
-  const { data: bids, isLoading: bidsLoading, isError: bidsError, refetch: refetchBids } = getallbidsquery(tenderId);
+  const {
+    data: user,
+    isLoading: userLoading,
+    isError: userError,
+  } = GetMyDetailsQuery();
+  const {
+    data: tenderDetails,
+    isLoading: tenderDetailsLoading,
+    isError: tenderDetailsError,
+    refetch: refetchTenderDetails,
+  } = tenderdetailsquery(tenderId);
+  const {
+    data: bids,
+    isLoading: bidsLoading,
+    isError: bidsError,
+    refetch: refetchBids,
+  } = getallbidsquery(tenderId);
 
-  const showToast = (message, type = 'error') => {
+  const showToast = (message, type = "error") => {
     toast[type](message, {
       position: "top-center",
       autoClose: 5000,
@@ -40,7 +59,7 @@ const BidList = () => {
   };
   if (userLoading || tenderDetailsLoading || bidsLoading) {
     return (
-      <div style={{ minHeight: '800px', minWidth: '1200px' }}>
+      <div style={{ minHeight: "800px", minWidth: "1200px" }}>
         <Loading />
       </div>
     );
@@ -58,22 +77,24 @@ const BidList = () => {
       const bidAmountFloat = parseFloat(bidAmount);
 
       if (isNaN(bidAmountFloat)) {
-        showToast('Invalid bid amount', 'error');
+        showToast("Invalid bid amount", "error");
         return;
       }
       if (bidAmountFloat < tenderDetails.cost) {
-        showToast('Bid amount should be more than the cost of the tender', 'error');
+        showToast(
+          "Bid amount should be more than the cost of the tender",
+          "error"
+        );
         return;
       }
 
       await createbid(bidAmountFloat, tenderId);
       refetchBids();
-      showToast('Bid Listed Successfully', 'success');
-      
+      showToast("Bid Listed Successfully", "success");
+
       // Refetch bids in the background
-      
     } catch (error) {
-      showToast('Some Error occurred in listing bid', 'error');
+      showToast("Some Error occurred in listing bid", "error");
     } finally {
       setLoadingAdd(false);
       setIsBidding(false);
@@ -84,37 +105,35 @@ const BidList = () => {
   const handleConfirmAction = async () => {
     try {
       switch (confirmationType) {
-        case 'delete':
+        case "delete":
           setLoadingDelete(true);
           await deletebid(selectedBid.id);
-          
-      refetchBids();
-     
-          showToast('Bid deleted successfully', 'success');
+
+          refetchBids();
+
+          showToast("Bid deleted successfully", "success");
           break;
-        case 'accept':
+        case "accept":
           setLoadingAccept(true);
           await acceptBid(selectedBid.id);
-         
-      refetchBids();
-      refetchTenderDetails();
-          showToast('Bid accepted successfully', 'success');
+
+          refetchBids();
+          refetchTenderDetails();
+          showToast("Bid accepted successfully", "success");
           break;
-        case 'reject':
+        case "reject":
           setLoadingReject(true);
           await rejectBid(selectedBid.id);
-         
-      refetchBids();
- 
-          showToast('Bid rejected successfully', 'success');
+
+          refetchBids();
+
+          showToast("Bid rejected successfully", "success");
           break;
         default:
           break;
       }
-
-      
     } catch (error) {
-      showToast('Error processing action', 'error');
+      showToast("Error processing action", "error");
     } finally {
       setLoadingDelete(false);
       setLoadingAccept(false);
@@ -124,11 +143,10 @@ const BidList = () => {
     }
   };
 
-
-
   const sortedBids = [...bids];
-  if (sortBy === 'lowToHigh') sortedBids.sort((a, b) => a.amount - b.amount);
-  else if (sortBy === 'highToLow') sortedBids.sort((a, b) => b.amount - a.amount);
+  if (sortBy === "lowToHigh") sortedBids.sort((a, b) => a.amount - b.amount);
+  else if (sortBy === "highToLow")
+    sortedBids.sort((a, b) => b.amount - a.amount);
 
   return (
     <div>
@@ -144,15 +162,15 @@ const BidList = () => {
             <button
               onClick={handleBid}
               className="bg-blue-500 text-white py-2 px-6 rounded-r-lg hover:bg-blue-600"
-              style={{ alignSelf: 'center' }}
+              style={{ alignSelf: "center" }}
               disabled={loadingAdd}
             >
-              {loadingAdd ? 'Submitting...' : 'Submit Bid'}
+              {loadingAdd ? "Submitting..." : "Submit Bid"}
             </button>
           </div>
         ) : (
           <div className="flex justify-center">
-            {user.role === 'vendor' && (
+            {user.role === "vendor" && (
               <button
                 onClick={() => setIsBidding(true)}
                 className="bg-green-500 text-white py-2 px-6 rounded-lg hover-bg-green-600"
@@ -170,17 +188,21 @@ const BidList = () => {
           <div className="ml-4 flex">
             <button
               className={`${
-                sortBy === 'lowToHigh' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
+                sortBy === "lowToHigh"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-300 text-gray-700"
               } py-2 px-4 rounded-l-lg hover-bg-blue-600`}
-              onClick={() => handleSort('lowToHigh')}
+              onClick={() => handleSort("lowToHigh")}
             >
               Low to High
             </button>
             <button
               className={`${
-                sortBy === 'highToLow' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'
+                sortBy === "highToLow"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-300 text-gray-700"
               } py-2 px-4 rounded-r-lg hover-bg-blue-600`}
-              onClick={() => handleSort('highToLow')}
+              onClick={() => handleSort("highToLow")}
             >
               High to Low
             </button>
@@ -192,16 +214,25 @@ const BidList = () => {
             <BidCard
               key={bid.id}
               bid={bid}
-              toAccept={() => { setSelectedBid(bid); setConfirmationType('accept'); }}
-              toReject={() => { setSelectedBid(bid); setConfirmationType('reject'); }}
-              toDelete={() => { setSelectedBid(bid); setConfirmationType('delete'); }}
+              toAccept={() => {
+                setSelectedBid(bid);
+                setConfirmationType("accept");
+              }}
+              toReject={() => {
+                setSelectedBid(bid);
+                setConfirmationType("reject");
+              }}
+              toDelete={() => {
+                setSelectedBid(bid);
+                setConfirmationType("delete");
+              }}
               loadingAccept={loadingAccept}
               loadingReject={loadingReject}
               loadingDelete={loadingDelete}
             />
           ))
         ) : (
-          <div className='flex items-center justify-center'>
+          <div className="flex items-center justify-center">
             <p className="text-gray-600">No bids yet.</p>
           </div>
         )}
@@ -210,16 +241,21 @@ const BidList = () => {
       {selectedBid && (
         <Confirmation
           message={
-            confirmationType === 'delete'
-              ? 'Are you sure you want to delete this bid?'
-              : confirmationType === 'accept'
-              ? 'Are you sure you want to accept this bid?'
-              : 'Are you sure you want to reject this bid?'
+            confirmationType === "delete"
+              ? "Are you sure you want to delete this bid?"
+              : confirmationType === "accept"
+              ? "Are you sure you want to accept this bid?"
+              : "Are you sure you want to reject this bid?"
           }
           onConfirm={handleConfirmAction}
-          onCancel={() => { setSelectedBid(null); setConfirmationType(null); }}
+          onCancel={() => {
+            setSelectedBid(null);
+            setConfirmationType(null);
+          }}
           confirmButtonClass={
-            confirmationType === 'accept' ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-red-500 hover:bg-red-600 text-white'
+            confirmationType === "accept"
+              ? "bg-green-500 hover:bg-green-600 text-white"
+              : "bg-red-500 hover:bg-red-600 text-white"
           }
         />
       )}

@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import {tenderdetailsquery} from '../../api/tender'
+import { tenderdetailsquery } from "../../api/tender";
 
+import { useParams } from "react-router-dom";
 
-import { useParams } from 'react-router-dom';
+import Loading from "../utils/Loading";
 
-import Loading from '../utils/Loading'
-
-import BidList from '../bids/BidList';
-import TenderDetailsCard from './TenderDetailsCard';
+import BidList from "../bids/BidList";
+import TenderDetailsCard from "./TenderDetailsCard";
 const TenderDetails = () => {
   const { tenderId } = useParams();
-  
+
   const {
     data: tenderDetails,
     isLoading: tenderDetailsLoading,
@@ -21,19 +20,18 @@ const TenderDetails = () => {
   if (tenderDetailsError) {
     return <div>Error loading tenderdetails.</div>;
   }
-if ( tenderDetailsLoading ) {
+  if (tenderDetailsLoading) {
     return (
-      <div style={{ minHeight: '800px', minWidth: '1200px' }}>
+      <div style={{ minHeight: "800px", minWidth: "1200px" }}>
         <Loading />
       </div>
     );
   }
- 
+
   return (
     <div className="bg-gray-200 w-full overflow-y-scroll scrollbar-hide pt-4">
-      <TenderDetailsCard tenderDetails={tenderDetails}/>
-     <BidList/>
-  
+      <TenderDetailsCard tenderDetails={tenderDetails} />
+      <BidList />
     </div>
   );
 };

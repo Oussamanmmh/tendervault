@@ -1,23 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const Leftdownbar = () => {
-
   const dummyPriceRanges = [
     {
       id: 1,
-      label: 'Under $100',
+      label: "Under $100",
     },
     {
       id: 2,
-      label: '$100 - $500',
+      label: "$100 - $500",
     },
     {
       id: 3,
-      label: '$500 - $1000',
+      label: "$500 - $1000",
     },
     {
       id: 4,
-      label: 'Over $1000',
+      label: "Over $1000",
     },
   ];
 
@@ -25,7 +24,9 @@ const Leftdownbar = () => {
 
   const handlePriceRangeChange = (priceRangeId) => {
     if (selectedPriceRanges.includes(priceRangeId)) {
-      setSelectedPriceRanges(selectedPriceRanges.filter((id) => id !== priceRangeId));
+      setSelectedPriceRanges(
+        selectedPriceRanges.filter((id) => id !== priceRangeId)
+      );
     } else {
       setSelectedPriceRanges([...selectedPriceRanges, priceRangeId]);
     }
@@ -40,17 +41,24 @@ const Leftdownbar = () => {
       </div>
       <ul>
         {dummyPriceRanges.map((priceRange) => (
-          <div className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-gray-500 p-1 group cursor-pointer hover:shadow-lg m-auto" key={priceRange.id}>
+          <div
+            className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-gray-500 p-1 group cursor-pointer hover:shadow-lg m-auto"
+            key={priceRange.id}
+          >
             <input
               type="checkbox"
               id={`price-range-${priceRange.id}`}
               checked={selectedPriceRanges.includes(priceRange.id)}
               onChange={() => handlePriceRangeChange(priceRange.id)}
-              style={{ transform: 'scale(1.5)' }}
+              style={{ transform: "scale(1.5)" }}
             />
             <label
               htmlFor={`price-range-${priceRange.id}`}
-              className={`text-base ${selectedPriceRanges.includes(priceRange.id) ? 'text-gray-600'  : 'text-gray-400'} font-semibold`}
+              className={`text-base ${
+                selectedPriceRanges.includes(priceRange.id)
+                  ? "text-gray-600"
+                  : "text-gray-400"
+              } font-semibold`}
             >
               {priceRange.label}
             </label>

@@ -1,66 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import { getallcategoryquery, getalltenderquery, searchTendersQuery } from '../../api/tender';
-import Navbar from '../Navbar';
-import Loading from '../utils/Loading';
-import TenderCard from '../tender/TenderCard';
-import CategoryFilter from '../utils/CategoryFilter';
-import PriceRangeFilter from '../utils/PriceRangeFilter';
-import { GetMyDetailsQuery } from '../../api/user';
-import Rightupbar from '../utils/Rightupbar';
-import Rightdownbar from '../utils/Rightdownbar';
-import { useDebounce } from '../../hooks/useDebounce'; 
+import React, { useState, useEffect } from "react";
+import {
+  getallcategoryquery,
+  getalltenderquery,
+  searchTendersQuery,
+} from "../../api/tender";
+import Navbar from "../Navbar";
+import Loading from "../utils/Loading";
+import TenderCard from "../tender/TenderCard";
+import CategoryFilter from "../utils/CategoryFilter";
+import PriceRangeFilter from "../utils/PriceRangeFilter";
+import { GetMyDetailsQuery } from "../../api/user";
+import Rightupbar from "../utils/Rightupbar";
+import Rightdownbar from "../utils/Rightdownbar";
+import { useDebounce } from "../../hooks/useDebounce";
 
 const Home = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showSoldTenders, setShowSoldTenders] = useState(false);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
+  const debouncedSearchTerm = useDebounce(searchTerm, 2000);
+  const {
+    data: categories,
+    isLoading: categoriesLoading,
+    isError: categoriesError,
+  } = getallcategoryquery();
+  const {
+    data: tenders,
+    isLoading: tendersLoading,
+    isError: tendersError,
+  } = getalltenderquery();
+  const {
+    data: searchResults,
+    isLoading: searchResultsLoading,
+    isError: searchResultsError,
+  } = searchTendersQuery(debouncedSearchTerm);
 
+  const {
+    data: user,
+    isLoading: userLoading,
+    isError: userError,
+  } = GetMyDetailsQuery();
 
-  
-const debouncedSearchTerm = useDebounce(searchTerm, 2000); 
-  const { data: categories, isLoading: categoriesLoading, isError: categoriesError } = getallcategoryquery();
-  const { data: tenders, isLoading: tendersLoading, isError: tendersError } = getalltenderquery();
-  const { data: searchResults, isLoading: searchResultsLoading, isError: searchResultsError } = searchTendersQuery(debouncedSearchTerm);
-
-  const {data:user,isLoading:userLoading,isError:userError} = GetMyDetailsQuery();
-
- 
-
-  if (categoriesLoading || tendersLoading||userLoading) {
+  if (categoriesLoading || tendersLoading || userLoading) {
     return (
-      <div style={{ minHeight: '800px', minWidth: '1200px' }}>
+      <div style={{ minHeight: "800px", minWidth: "1200px" }}>
         <Loading />
       </div>
     );
   }
 
-  if (categoriesError || tendersError||userError) {
+  if (categoriesError || tendersError || userError) {
     return <div>Error loading data.</div>;
   }
 
   const dummyPriceRanges = [
-    { id: 1, label: 'Under 1000', minPrice: 0, maxPrice: 1000 },
-    { id: 2, label: '1001 - 1500', minPrice: 1001, maxPrice: 1500 },
-    { id: 3, label: '1501 - 2000', minPrice: 1501, maxPrice: 2000 },
-    { id: 4, label: '2001 - 2500', minPrice: 2001, maxPrice: 2500 },
-    { id: 5, label: 'Over 2500', minPrice: 2501, maxPrice: Infinity },
+    { id: 1, label: "Under 1000", minPrice: 0, maxPrice: 1000 },
+    { id: 2, label: "1001 - 1500", minPrice: 1001, maxPrice: 1500 },
+    { id: 3, label: "1501 - 2000", minPrice: 1501, maxPrice: 2000 },
+    { id: 4, label: "2001 - 2500", minPrice: 2001, maxPrice: 2500 },
+    { id: 5, label: "Over 2500", minPrice: 2501, maxPrice: Infinity },
   ];
 
   const handleCategoryChange = (categoryId) => {
     const categoryName = categories[categoryId].toLowerCase();
-    setSelectedCategories(prev =>
+    setSelectedCategories((prev) =>
       prev.includes(categoryName)
-        ? prev.filter(name => name !== categoryName)
+        ? prev.filter((name) => name !== categoryName)
         : [...prev, categoryName]
     );
   };
 
   const handlePriceRangeChange = (priceRangeId) => {
-    setSelectedPriceRanges(prev =>
+    setSelectedPriceRanges((prev) =>
       prev.includes(priceRangeId)
-        ? prev.filter(range => range !== priceRangeId)
+        ? prev.filter((range) => range !== priceRangeId)
         : [...prev, priceRangeId]
     );
   };
@@ -69,38 +84,57 @@ const debouncedSearchTerm = useDebounce(searchTerm, 2000);
     setSearchTerm(query);
   };
 
-  const handleSearch = () => {
-  };
+  const handleSearch = () => {};
 
   const getFilteredTenders = () => {
-    if (debouncedSearchTerm !== '' && searchResults) {
+    if (debouncedSearchTerm !== "" && searchResults) {
       return searchResults.data.filter((tender) => {
         const categoryName = tender.category.toLowerCase();
-        const isCategorySelected = !selectedCategories.length || selectedCategories.includes(categoryName);
+        const isCategorySelected =
+          !selectedCategories.length ||
+          selectedCategories.includes(categoryName);
 
-        const isPriceInRange = !selectedPriceRanges.length || selectedPriceRanges.some(priceRangeId => {
-          const range = dummyPriceRanges.find(r => r.id === priceRangeId);
-          return range && tender.cost >= range.minPrice && tender.cost <= range.maxPrice;
-        });
+        const isPriceInRange =
+          !selectedPriceRanges.length ||
+          selectedPriceRanges.some((priceRangeId) => {
+            const range = dummyPriceRanges.find((r) => r.id === priceRangeId);
+            return (
+              range &&
+              tender.cost >= range.minPrice &&
+              tender.cost <= range.maxPrice
+            );
+          });
 
-        const isSoldStatusMatch = !showSoldTenders || tender.status === 'sold';
+        const isSoldStatusMatch = !showSoldTenders || tender.status === "sold";
 
         return isCategorySelected && isPriceInRange && isSoldStatusMatch;
       });
     } else {
       //for frontend search
       return tenders.filter((tender) => {
-        const isSearchMatch = !debouncedSearchTerm || tender.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+        const isSearchMatch =
+          !debouncedSearchTerm ||
+          tender.title
+            .toLowerCase()
+            .includes(debouncedSearchTerm.toLowerCase());
 
         const categoryName = tender.category.toLowerCase();
-        const isCategorySelected = !selectedCategories.length || selectedCategories.includes(categoryName);
+        const isCategorySelected =
+          !selectedCategories.length ||
+          selectedCategories.includes(categoryName);
 
-        const isPriceInRange = !selectedPriceRanges.length || selectedPriceRanges.some(priceRangeId => {
-          const range = dummyPriceRanges.find(r => r.id === priceRangeId);
-          return range && tender.cost >= range.minPrice && tender.cost <= range.maxPrice;
-        });
+        const isPriceInRange =
+          !selectedPriceRanges.length ||
+          selectedPriceRanges.some((priceRangeId) => {
+            const range = dummyPriceRanges.find((r) => r.id === priceRangeId);
+            return (
+              range &&
+              tender.cost >= range.minPrice &&
+              tender.cost <= range.maxPrice
+            );
+          });
 
-        const isSoldStatusMatch = !showSoldTenders || tender.status === 'sold';
+        const isSoldStatusMatch = !showSoldTenders || tender.status === "sold";
 
         return isCategorySelected && isPriceInRange && isSoldStatusMatch;
       });
@@ -110,7 +144,11 @@ const debouncedSearchTerm = useDebounce(searchTerm, 2000);
   const filteredTenders = getFilteredTenders();
 
   const renderTenders = () => {
-    if (debouncedSearchTerm !== '' && searchResults && searchResults.length === 0) {
+    if (
+      debouncedSearchTerm !== "" &&
+      searchResults &&
+      searchResults.length === 0
+    ) {
       return <div className="text-gray-600">No matches found.</div>;
     }
 
@@ -129,11 +167,11 @@ const debouncedSearchTerm = useDebounce(searchTerm, 2000);
 
   return (
     <div className="t">
-      <Navbar 
-        searchTerm={searchTerm} 
-        onSearchChange={handleSearchChange} 
-        handleSearch={handleSearch} 
-        user={user} 
+      <Navbar
+        searchTerm={searchTerm}
+        onSearchChange={handleSearchChange}
+        handleSearch={handleSearch}
+        user={user}
       />
       <div className="flex flex-row h-[90vh]">
         <div className="hidden lg:grid justify-items-center w-[43%] bg-gray-200">
@@ -152,7 +190,7 @@ const debouncedSearchTerm = useDebounce(searchTerm, 2000);
           <div className="flex justify-between p-4 px-16">
             <h1
               className={`cursor-pointer font-bold text-xl ${
-                !showSoldTenders ? 'text-blue-700' : 'text-gray-500'
+                !showSoldTenders ? "text-blue-700" : "text-gray-500"
               }`}
               onClick={() => setShowSoldTenders(false)}
             >
@@ -160,7 +198,7 @@ const debouncedSearchTerm = useDebounce(searchTerm, 2000);
             </h1>
             <h1
               className={`cursor-pointer font-bold text-xl ${
-                showSoldTenders ? 'text-blue-700' : 'text-gray-500'
+                showSoldTenders ? "text-blue-700" : "text-gray-500"
               }`}
               onClick={() => setShowSoldTenders(true)}
             >

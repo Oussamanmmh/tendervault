@@ -1,16 +1,21 @@
-
 import { Avatar } from "@chakra-ui/react";
 import React from "react";
 import { GetCompanyQuery } from "../../api/user";
 import Loading from "./Loading";
 import { Link } from "react-router-dom";
 const Rightupbar = () => {
-  const { data: companies, isLoading: companiesLoading, isError: companiesError } = GetCompanyQuery();
+  const {
+    data: companies,
+    isLoading: companiesLoading,
+    isError: companiesError,
+  } = GetCompanyQuery();
 
   if (companiesLoading) {
-    return  <div style={{ minHeight: '800px',minWidth:'400px' }}>
+    return (
+      <div style={{ minHeight: "800px", minWidth: "400px" }}>
         <Loading />
       </div>
+    );
   }
 
   if (companiesError) {
@@ -26,21 +31,21 @@ const Rightupbar = () => {
       </div>
       <ul>
         {companies?.map((company) => {
-          const companyName = company.name.length > 20 
-            ? company.name.substring(0, 20) + "..." 
-            : company.name;
+          const companyName =
+            company.name.length > 20
+              ? company.name.substring(0, 20) + "..."
+              : company.name;
           return (
             <div
               className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-gray-300 p-1 group cursor-pointer hover:shadow-lg m-auto"
               key={company.id}
             >
-              <Avatar className="w-10 h-10 bg-gray-500 rounded-3xl" src={company.profileImage} />
+              <Avatar
+                className="w-10 h-10 bg-gray-500 rounded-3xl"
+                src={company.profileImage}
+              />
               <Link to={`/profile/${company.id}`}>
-              <h3
-                className="text-gray-800  font-semibold"
-              >
-                {companyName}
-              </h3>
+                <h3 className="text-gray-800  font-semibold">{companyName}</h3>
               </Link>
             </div>
           );

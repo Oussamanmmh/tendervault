@@ -1,12 +1,24 @@
-import React from 'react';
-import { GetMyDetailsQuery } from '../../api/user';
-import { tenderdetailsquery } from '../../api/tender';
-import Loading from '../utils/Loading';
-import { useParams } from 'react-router';
+import React from "react";
+import { GetMyDetailsQuery } from "../../api/user";
+import { tenderdetailsquery } from "../../api/tender";
+import Loading from "../utils/Loading";
+import { useParams } from "react-router";
 
-const BidCard = ({ bid, toAccept, toReject, toDelete, loadingAccept, loadingReject, loadingDelete }) => {
+const BidCard = ({
+  bid,
+  toAccept,
+  toReject,
+  toDelete,
+  loadingAccept,
+  loadingReject,
+  loadingDelete,
+}) => {
   const { tenderId } = useParams();
-  const { data: user, isLoading: userLoading, isError: userError } = GetMyDetailsQuery();
+  const {
+    data: user,
+    isLoading: userLoading,
+    isError: userError,
+  } = GetMyDetailsQuery();
   const {
     data: tenderDetails,
     isLoading: tenderDetailsLoading,
@@ -34,46 +46,51 @@ const BidCard = ({ bid, toAccept, toReject, toDelete, loadingAccept, loadingReje
       <div>
         {loggedInUserId === tenderDetails.companyId ? (
           <div>
-            {tenderDetails.status !== 'sold' && (
+            {tenderDetails.status !== "sold" && (
               <div className="flex space-x-2">
-                {bid.status !== 'rejected' && (
+                {bid.status !== "rejected" && (
                   <button
                     className={`bg-green-500 text-white py-2 px-4 rounded-lg ${
-                      loadingAccept ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'
+                      loadingAccept
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:bg-green-600"
                     }`}
                     onClick={toAccept}
                     disabled={loadingAccept}
                   >
-                    {loadingAccept ? 'Accepting...' : 'Accept'}
+                    {loadingAccept ? "Accepting..." : "Accept"}
                   </button>
                 )}
-                {bid.status !== 'rejected' && (
+                {bid.status !== "rejected" && (
                   <button
                     className={`bg-red-500 text-white py-2 px-4 rounded-lg ${
-                      loadingReject ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-600'
+                      loadingReject
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:bg-red-600"
                     }`}
                     onClick={toReject}
                     disabled={loadingReject}
                   >
-                    {loadingReject ? 'Rejecting...' : 'Reject'}
+                    {loadingReject ? "Rejecting..." : "Reject"}
                   </button>
                 )}
               </div>
             )}
           </div>
         ) : (
-          loggedInUserId === bid.vendorId && (
-            bid.status !== 'rejected' && (
-              <button
-                onClick={toDelete}
-                className={`bg-red-500 text-white py-2 px-4 rounded-lg ${
-                  loadingDelete ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-600'
-                }`}
-                disabled={loadingDelete}
-              >
-                {loadingDelete ? 'Deleting...' : 'Delete'}
-              </button>
-            )
+          loggedInUserId === bid.vendorId &&
+          bid.status !== "rejected" && (
+            <button
+              onClick={toDelete}
+              className={`bg-red-500 text-white py-2 px-4 rounded-lg ${
+                loadingDelete
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-red-600"
+              }`}
+              disabled={loadingDelete}
+            >
+              {loadingDelete ? "Deleting..." : "Delete"}
+            </button>
           )
         )}
       </div>

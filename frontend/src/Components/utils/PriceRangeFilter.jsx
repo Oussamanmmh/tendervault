@@ -1,6 +1,10 @@
-import React from 'react';
+import React from "react";
 
-const PriceRangeFilter = ({ priceRanges, selectedPriceRanges, onPriceRangeChange }) => {
+const PriceRangeFilter = ({
+  priceRanges,
+  selectedPriceRanges,
+  onPriceRangeChange,
+}) => {
   return (
     <div className="w-[80%] col-span-1 relative lg:h-[40vh] h-[50vh] my-4 mx-4 border rounded-xl bg-gray-50 overflow-scroll scrollbar-hide shadow-lg">
       <div className="sticky top-0 z-40 bg-blue-700 p-1 h-10 w-full">
@@ -19,15 +23,19 @@ const PriceRangeFilter = ({ priceRanges, selectedPriceRanges, onPriceRangeChange
               id={`price-range-${range.id}`}
               checked={selectedPriceRanges.includes(range.id)}
               onChange={() => onPriceRangeChange(range.id)}
-              style={{ transform: 'scale(1.5)' }}
+              style={{ transform: "scale(1.5)" }}
             />
             <label
               htmlFor={`price-range-${range.id}`}
-              className={`text-base ${selectedPriceRanges.includes(range.id) ? 'text-gray-800' : 'text-gray-800'} font-semibold`}
+              className={`text-base ${
+                selectedPriceRanges.includes(range.id)
+                  ? "text-gray-800"
+                  : "text-gray-800"
+              } font-semibold`}
             >
-              {
-                range.label.length>25  ? range.label.substring(0, 25) + "..." : range.label
-              }
+              {range.label.length > 25
+                ? range.label.substring(0, 25) + "..."
+                : range.label}
             </label>
           </li>
         ))}

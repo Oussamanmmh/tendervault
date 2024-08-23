@@ -1,19 +1,19 @@
 import { TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from 'react-toastify';
-  import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { registerUser } from "../../api";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { useNavigate } from "react-router";
 import Loading from "../utils/Loading";
-import register1 from "../../assets/register1.jpg"
+import register1 from "../../assets/register1.jpg";
 function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [button, setbutton] = useState(false);
   const [apiError, setApiError] = useState(null);
-     const showToast = (message, type = 'error') => {
+  const showToast = (message, type = "error") => {
     toast[type](message, {
       position: "top-center",
       autoClose: 5000,
@@ -39,18 +39,16 @@ function Register() {
       name: "",
       email: "",
       password: "",
-      role:"",
-
+      role: "",
     },
   });
-
 
   const onSubmit = async (formData) => {
     setbutton(true);
     try {
       const { data } = await registerUser(formData);
 
-      showToast('User Registered Successfully', 'success');
+      showToast("User Registered Successfully", "success");
       navigate("/login");
       reset();
       setApiError(null);
@@ -58,7 +56,7 @@ function Register() {
       setValue("email", "");
       setValue("picture", null);
     } catch (err) {
-      showToast('Some Error Occured during Register', 'error');
+      showToast("Some Error Occured during Register", "error");
       setApiError(err.response.data.message);
       setbutton(false);
     }
@@ -66,18 +64,18 @@ function Register() {
   return (
     <div className="flex">
       <div className=" hidden lg:block w-1/2 h-screen bg-blue-400">
-        <img
-          className="object-cover h-full w-full"
-          src={register1}
-        />
+        <img className="object-cover h-full w-full" src={register1} />
       </div>
       <div className="flex lg:w-1/2  sm:w-full h-screen justify-center p-10">
         <div className="flex flex-col ">
-       
-           <div className="p-4 m-4">
-                  <span className='font-mont text-blue-800 text-4xl font-bold'>Tender</span>
-                  <span className='font-mont text-blue-400 text-4xl font-bold'>Vault</span>
-               </div>
+          <div className="p-4 m-4">
+            <span className="font-mont text-blue-800 text-4xl font-bold">
+              Tender
+            </span>
+            <span className="font-mont text-blue-400 text-4xl font-bold">
+              Vault
+            </span>
+          </div>
           <p className="text-gray-500">New User? </p>
           <h1 className="font-bold text-3xl font-mono">Register</h1>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -185,7 +183,6 @@ function Register() {
           </form>
         </div>
       </div>
-     
     </div>
   );
 }
