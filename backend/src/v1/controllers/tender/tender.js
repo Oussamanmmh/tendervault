@@ -179,7 +179,7 @@ const tenderController = {
   async updateTender(req, res, next) {
     try {
       const { id } = req.query;
-      const { title, description, category, cost,status } = req.body;
+      const { title, description, category, cost,status,imageUrl } = req.body;
       const userId = req.user.id;
       const tender = await prisma.tender.findUnique({
         where: {
@@ -213,7 +213,8 @@ const tenderController = {
           description: description,
           category: category,
           cost: cost,
-          status:status
+          status:status,
+          imageUrl
         },
       });
 

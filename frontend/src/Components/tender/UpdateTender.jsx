@@ -44,11 +44,12 @@ const UpdateTender = () => {
   };
   useEffect(() => {
     if (!isLoading && !isError && tenderDetails) {
-      const { title, description, cost, category } = tenderDetails;
+      const { title, description, cost, category,imageUrl } = tenderDetails;
       setTenderName(title || "");
       setDescription(description || "");
       setCost(parseFloat(cost) || 0);
       setCategory(category || "");
+      setTenderImage(imageUrl || "");
     }
   }, [tenderDetails, isLoading, isError]);
 
@@ -66,13 +67,12 @@ const UpdateTender = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const updatedTender = {
       title: tenderName,
       description,
       cost: parseFloat(cost),
       category,
-      image: tenderImage,
+      imageUrl: tenderImage,
     };
     try {
       setLoadingUpdate(true);
@@ -172,6 +172,22 @@ const UpdateTender = () => {
             </div>
             <div className="mb-4">
               <label
+                htmlFor="tenderImage"
+                className="block text-gray-700 text-sm font-bold"
+              >
+                Image Url
+              </label>
+              <input
+                type="text"
+                id="tenderImage"
+                className="w-full py-2 px-3 border rounded-lg border-gray-300 focus:outline-none focus:border-blue-500"
+                value={tenderImage}
+                onChange={(e) => setTenderImage(e.target.value)}
+                required
+              />
+            </div>
+            {/* <div className="mb-4">
+              <label
                 htmlFor="image"
                 className="block text-gray-700 text-sm font-bold"
               >
@@ -199,7 +215,7 @@ const UpdateTender = () => {
                 onChange={(e) => setDocument(e.target.files[0])}
                 className="w-full py-2 px-3 border rounded-lg border-gray-300 focus:outline-none focus:border-blue-500"
               />
-            </div>
+            </div> */}
             <button
               type="submit"
               className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none"

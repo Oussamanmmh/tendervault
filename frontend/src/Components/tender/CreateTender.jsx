@@ -65,6 +65,7 @@ const CreateTender = () => {
           description: "",
           cost: 0.0,
           category: "",
+          imageUrl:"",
         });
         navigate("/home");
       } else {
@@ -159,6 +160,23 @@ const CreateTender = () => {
             </div>
             <div className="mb-4">
               <label
+                htmlFor="imageUrl"
+                className="block text-gray-700 text-sm font-bold"
+              >
+                Image Url
+              </label>
+              <input
+                type="text"
+                id="imageUrl"
+                name="imageUrl"
+                className="w-full py-2 px-3 border rounded-lg border-gray-300 focus:outline-none focus:border-blue-500"
+                value={tenderInfo.imageUrl}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            {/* <div className="mb-4">
+              <label
                 htmlFor="image"
                 className="block text-gray-700 text-sm font-bold"
               >
@@ -171,8 +189,8 @@ const CreateTender = () => {
                 onChange={(e) => setTenderImage(e.target.files[0])}
                 className="w-full py-2 px-3 border rounded-lg border-gray-300 focus:outline-none focus:border-blue-500"
               />
-            </div>
-            <div className="mb-4">
+            </div> */}
+            {/* <div className="mb-4">
               <label
                 htmlFor="document"
                 className="block text-gray-700 text-sm font-bold"
@@ -186,7 +204,7 @@ const CreateTender = () => {
                 onChange={(e) => setDocument(e.target.files[0])}
                 className="w-full py-2 px-3 border rounded-lg border-gray-300 focus:outline-none focus:border-blue-500"
               />
-            </div>
+            </div> */}
             <button
               type="submit"
               className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover-bg-blue-600 focus:outline-none"
