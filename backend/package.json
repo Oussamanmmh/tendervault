@@ -5,10 +5,9 @@
   "description": "backend",
   "main": "app.js",
   "scripts": {
-    "start": "node src/app.js",
-    "postinstall": "npx prisma generate",
+    "start": "node build/app.js",
     "dev": "nodemon --exec babel-node src/app.js",
-    "build": "babel src -s -d build --copy-files",
+    "build": "npx prisma generate && babel src -s -d build --copy-files",
     "lint": "eslint src/**/*.js",
     "lint-fix": "eslint src/**/*.js --fix"
   },
