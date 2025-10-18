@@ -4,13 +4,15 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import createError from "http-errors";
 import morgan from "morgan";
+import { fileURLToPath } from "url";
 import path from "path";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-import "./v1/config/env.config";
+import "./v1/config/env.config.js";
 
-import { authRoutes, userRoute } from "./v1/routes";
-
+import { authRoutes, userRoute } from "./v1/routes/index.js";
 
 // const openai = new OpenAI({
 //   apiKey: process.env.OPENAI_API_KEY, // This is also the default, can be omitted
@@ -27,7 +29,12 @@ const limiter = rateLimit({
 });
 
 const corsOptions = {
-  origin: ["http://localhost:5173"],
+  origin: [
+    "http://localhost:5173",
+    "http://mynet.tn",
+    "https://mynet.tn",
+    "https://www.mynet.tn",
+  ],
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 };
@@ -46,22 +53,27 @@ app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
 // app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
 
-// Welcome Route
-app.all("/", (req, res, next) => {
-  res.send({ message: "API is Up and Running on render 😎🚀" });
-});
-
 const apiVersion = "v1";
+
+if (process.env.NODE_ENV === "production") {
+  const frontendDist = path.resolve(__dirname, "../../frontend/dist");
+  app.use(express.static(frontendDist));
+
+  // SPA fallback - serves index.html for all non-API routes
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(frontendDist, "index.html"));
+  });
+}
 
 // Routes
 app.use(`/${apiVersion}/auth`, authRoutes);
 app.use(`/${apiVersion}/user`, userRoute);
 
-
-// // 404 Handler
-app.use((req, res, next) => {
-  next(createError.NotFound());
-});
+if (process.env.NODE_ENV !== "production") {
+  app.use((req, res, next) => {
+    next(createError.NotFound());
+  });
+}
 
 // // Error Handler
 app.use((err, req, res, next) => {
@@ -73,7 +85,7 @@ app.use((err, req, res, next) => {
 });
 
 // Server Configs
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {
   console.log(`🚀 @ http://localhost:${PORT}`);
   console.log(`connected to ${process.env.DATABASE_URL}`);

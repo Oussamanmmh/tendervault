@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 
 import createError from "http-errors";
 import ms from "ms";
-import { customResponse } from "../../../utils/Response";
+import { customResponse } from "../../../utils/Response.js";
 
 const prisma = new PrismaClient();
 const loginController = {
@@ -26,8 +26,6 @@ const loginController = {
       if (!isPasswordMatch) {
         return next(createError.Unauthorized("Verify your Credentials1"));
       }
-
-    
 
       const accessToken = jwt.sign(user.id, process.env.USER_ACCESS_SECRET);
 
@@ -55,11 +53,8 @@ const loginController = {
     }
   },
 
-
   async register(req, res, next) {
     try {
-    
-
       const resp = await req.body;
       delete resp.confirmPassword;
       const user = await prisma.user.findUnique({
@@ -72,7 +67,6 @@ const loginController = {
           message: "User already exists",
         });
       }
-     
 
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(resp.password, salt);

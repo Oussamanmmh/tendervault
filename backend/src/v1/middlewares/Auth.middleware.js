@@ -1,19 +1,12 @@
-import { NextFunction, Request, Response } from "express";
 import createError from "http-errors";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import prisma from "../../prisma/index";
-import config from "../config/env.config";
-
-
+import jwt from "jsonwebtoken";
+import prisma from "../../prisma/index.js";
 
 const authMiddleware = async (req, _res, next) => {
   const authHeader = req.headers.authorization;
-   if (!authHeader) {
-
-    return _res.status(401).json({ message: 'Unauthorized. Please log in.' });
+  if (!authHeader) {
+    return _res.status(401).json({ message: "Unauthorized. Please log in." });
   }
-
-
 
   const token = authHeader.split(" ")[1];
   try {
