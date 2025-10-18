@@ -6,7 +6,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node src/app.js",
-    "postinstall": "npm audit fix && npx prisma generate",
+    "postinstall": "npm audit fix --force && npx prisma generate",
     "dev": "nodemon --exec babel-node src/app.js",
     "build": "babel src -s -d build --copy-files",
     "lint": "eslint src/**/*.js",
