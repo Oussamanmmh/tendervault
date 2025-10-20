@@ -55,25 +55,12 @@ app.use(morgan("dev"));
 
 const apiVersion = "v1";
 
-if (process.env.NODE_ENV === "production") {
-  const frontendDist = path.resolve(__dirname, "../../frontend/dist");
-  app.use(express.static(frontendDist));
 
-  // SPA fallback - serves index.html for all non-API routes
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(frontendDist, "index.html"));
-  });
-}
 
 // Routes
 app.use(`/${apiVersion}/auth`, authRoutes);
 app.use(`/${apiVersion}/user`, userRoute);
 
-if (process.env.NODE_ENV !== "production") {
-  app.use((req, res, next) => {
-    next(createError.NotFound());
-  });
-}
 
 // // Error Handler
 app.use((err, req, res, next) => {
