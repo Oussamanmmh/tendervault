@@ -40,9 +40,7 @@ const tenderController = {
         message: "An error occurred while creating the tender.",
         error: error.message,
       });
-    } finally {
-      await prisma.$disconnect();
-    }
+    } 
   },
   async getAllTenders(req, res, next) {
     try {
@@ -59,9 +57,7 @@ const tenderController = {
         message: "An error occurred while fetching tenders.",
         error: error.message,
       });
-    } finally {
-      await prisma.$disconnect();
-    }
+    } 
   },
   async searchTendersByName(req, res, next) {
     try {
@@ -88,9 +84,7 @@ const tenderController = {
         message: "An error occurred while searching for tenders by name.",
         error: error.message,
       });
-    } finally {
-      await prisma.$disconnect();
-    }
+    } 
   },
 
   async getMyTenders(req, res, next) {
@@ -124,9 +118,7 @@ const tenderController = {
         message: "Internal server error",
         data: error,
       });
-    } finally {
-      await prisma.$disconnect();
-    }
+    } 
   },
   async deleteTender(req, res, next) {
     try {
@@ -172,9 +164,7 @@ const tenderController = {
         message: "An error occurred while deleting the tender.",
         error: error.message,
       });
-    } finally {
-      await prisma.$disconnect();
-    }
+    } 
   },
   async updateTender(req, res, next) {
     try {
@@ -229,9 +219,7 @@ const tenderController = {
         message: "An error occurred while updating the tender.",
         error: error.message,
       });
-    } finally {
-      await prisma.$disconnect();
-    }
+    } 
   },
   async reviewTender(req, res, next) {
     try {
@@ -280,9 +268,7 @@ const tenderController = {
         message: "An error occurred while reviewing the tender.",
         error: error.message,
       });
-    } finally {
-      await prisma.$disconnect();
-    }
+    } 
   },
   async getTenderDetails(req, res, next) {
     try {
@@ -310,9 +296,7 @@ const tenderController = {
         message: "Internal server error",
         data: error,
       });
-    } finally {
-      await prisma.$disconnect();
-    }
+    } 
   },
 
   async createBid(req, res, next) {
@@ -371,9 +355,7 @@ const tenderController = {
         message: "Internal server error",
         data: error,
       });
-    } finally {
-      await prisma.$disconnect();
-    }
+    } 
   },
   async getallbids(req, res, next) {
     try {
@@ -409,9 +391,7 @@ const tenderController = {
         message: "Internal server error",
         data: error,
       });
-    } finally {
-      await prisma.$disconnect();
-    }
+    } 
   },
   async deleteBid(req, res, next) {
     try {
@@ -458,9 +438,7 @@ const tenderController = {
         message: "An error occurred while deleting the bid.",
         error: error.message,
       });
-    } finally {
-      await prisma.$disconnect();
-    }
+    } 
   },
   async acceptBid(req, res, next) {
     try {
@@ -536,9 +514,7 @@ const tenderController = {
         message: "An error occurred while accepting the bid.",
         error: error.message,
       });
-    } finally {
-      await prisma.$disconnect();
-    }
+    } 
   },
   async rejectBid(req, res, next) {
     try {
@@ -600,9 +576,7 @@ const tenderController = {
         message: "An error occurred while rejecting the bid.",
         error: error.message,
       });
-    } finally {
-      await prisma.$disconnect();
-    }
+    } 
   },
   async getAllCategories(req, res, next) {
     try {
@@ -628,9 +602,7 @@ const tenderController = {
         message: "Internal server error",
         data: error,
       });
-    } finally {
-      await prisma.$disconnect();
-    }
+    } 
   },
 };
 
